@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 120" role="img" aria-label="Glassback stalker alien">
+  <ellipse cx="53" cy="109" rx="30" ry="4" fill="#0a1119" opacity=".65"/>
+  <path d="m36 72-11 21-16 9 19 2 14-18 9 2 9 18 19-3-14-10-5-21" fill="#222936" stroke="#10151e" stroke-width="4"/>
+  <path d="m35 55-17 5-9 18 20-7 16 9 17-10 19 7-8-18-20-5" fill="#333847" stroke="#171e28" stroke-width="3"/>
+  <path d="m25 60-14 12m54-12 15 13" stroke="#69788b" stroke-width="5" stroke-linecap="round"/>
+  <path d="M31 49q-2-21 12-30 17-10 30 7l-1 24-18 10-17-5z" fill="#414959" stroke="#202735" stroke-width="3"/>
+  <path d="m30 44 11-34 10 29 14-35 8 39-20 18z" fill="#80cbbd" fill-opacity=".44" stroke="#c5fff1" stroke-width="2"/>
+  <path d="m41 13 10 25 14-31m-14 31-6 15" fill="none" stroke="#e0fff8" stroke-width="2" opacity=".9"/>
+  <path d="M39 39q5-6 10 0m8-1q5-5 10 1" fill="none" stroke="#65f0d2" stroke-width="3" stroke-linecap="round"/>
+  <path d="m39 49 7 3 7-3" fill="none" stroke="#171e28" stroke-width="2"/>
+  <path d="m29 65 11 4m23-3 11-5" stroke="#8a9db1" stroke-width="3"/>
+</svg>

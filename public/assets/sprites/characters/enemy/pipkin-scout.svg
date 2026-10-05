@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 112" role="img" aria-label="Mosskin scout alien">
+  <ellipse cx="45" cy="103" rx="25" ry="5" fill="#091812" opacity=".5"/>
+  <path d="M34 72 25 91l-8 9 13 2 9-15 7-1 8 16 13-2-10-11-4-20" fill="#315740" stroke="#182d25" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M35 50q-20 3-22 18l9 11 15-7 16 7 15-11q-3-14-22-18" fill="#56856c" stroke="#294637" stroke-width="3"/>
+  <path d="m22 65-12 8m54-8 11 8" fill="none" stroke="#56856c" stroke-width="6" stroke-linecap="round"/>
+  <path d="M29 46q-7-18 2-29Q38 7 50 11q14 3 15 18l-4 19-15 8-14-5z" fill="#7da77a" stroke="#294637" stroke-width="3"/>
+  <path d="M32 23q13-11 28 0" fill="none" stroke="#bdd49a" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="38" cy="32" rx="5" ry="7" fill="#172c25"/><ellipse cx="55" cy="32" rx="5" ry="7" fill="#172c25"/>
+  <circle cx="39" cy="31" r="2" fill="#62f2d1"/><circle cx="56" cy="31" r="2" fill="#62f2d1"/>
+  <path d="M41 43q6 4 12 0" fill="none" stroke="#294637" stroke-width="2" stroke-linecap="round"/>
+  <path d="m22 50-7-8 11 1m40 7 8-8-12 1" fill="#a5c98c" stroke="#56856c" stroke-width="2"/>
+  <circle cx="47" cy="62" r="5" fill="#62f2d1" opacity=".9"/>
+</svg>

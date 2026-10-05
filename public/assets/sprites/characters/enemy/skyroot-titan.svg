@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Skyroot titan alien">
+  <ellipse cx="57" cy="131" rx="38" ry="6" fill="#101a19" opacity=".5"/>
+  <path d="m37 96-6 22-16 10 22 2 13-18 13 18 21-3-17-11-7-22" fill="#31544b" stroke="#243b36" stroke-width="4"/>
+  <path d="M35 68q-20 1-25 22l16 15 24-11 21 12 18-17q-5-19-26-22" fill="#477e72" stroke="#29463e" stroke-width="4"/>
+  <path d="m28 71-18 13m69-13 17 13" stroke="#477e72" stroke-width="9" stroke-linecap="round"/>
+  <path d="M29 61q-6-24 9-36 18-12 37 3l5 31-24 15-21-6z" fill="#679789" stroke="#2d5149" stroke-width="4"/>
+  <path d="m34 39-13-26 24 15m1 6 11-31 8 32m3 7 19-24-13 35" fill="#b2c982" stroke="#477e72" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M39 46q6-8 13 0m8 0q6-8 13 0" fill="none" stroke="#f4cc70" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="46" cy="46" r="2" fill="#fff4c0"/><circle cx="66" cy="46" r="2" fill="#fff4c0"/>
+  <path d="M47 59q8 5 16 0" fill="none" stroke="#29463e" stroke-width="3"/>
+  <circle cx="53" cy="84" r="8" fill="#bddc86" opacity=".8"/><circle cx="53" cy="84" r="4" fill="#f4cc70"/>
+  <path d="m23 91 14 5m39-5 14-6" stroke="#b2c982" stroke-width="4"/>
+</svg>

@@ -1,0 +1,728 @@
+{
+  "generated": "2026-09-28T02:39:52.167Z",
+  "players": [
+    {
+      "level": "start",
+      "name": "Fire-Lancer",
+      "env": "daytime",
+      "arch": "firelance",
+      "path": "/assets/sprites/characters/player/fire_lancer.svg"
+    },
+    {
+      "level": "start",
+      "name": "Plasma Energy Generator",
+      "env": "daytime",
+      "arch": "generator",
+      "path": "/assets/sprites/characters/player/plasma_energy_generator.svg"
+    },
+    {
+      "level": 1,
+      "name": "Bombman",
+      "env": "daytime",
+      "arch": "bomb",
+      "path": "/assets/sprites/characters/player/bombman.svg"
+    },
+    {
+      "level": 2,
+      "name": "Rifleman",
+      "env": "daytime",
+      "arch": "rifle",
+      "path": "/assets/sprites/characters/player/rifleman.svg"
+    },
+    {
+      "level": 3,
+      "name": "Sniper",
+      "env": "daytime",
+      "arch": "sniper",
+      "path": "/assets/sprites/characters/player/sniper.svg"
+    },
+    {
+      "level": 4,
+      "name": "Heavy Gunner",
+      "env": "daytime",
+      "arch": "heavy",
+      "path": "/assets/sprites/characters/player/heavy_gunner.svg"
+    },
+    {
+      "level": 5,
+      "name": "Rocket Trooper",
+      "env": "daytime",
+      "arch": "rocket",
+      "path": "/assets/sprites/characters/player/rocket_trooper.svg"
+    },
+    {
+      "level": 6,
+      "name": "Combat Medic",
+      "env": "daytime",
+      "arch": "medic",
+      "path": "/assets/sprites/characters/player/combat_medic.svg"
+    },
+    {
+      "level": 7,
+      "name": "Shield Soldier",
+      "env": "daytime",
+      "arch": "shield",
+      "path": "/assets/sprites/characters/player/shield_soldier.svg"
+    },
+    {
+      "level": 8,
+      "name": "Machine Gunner",
+      "env": "daytime",
+      "arch": "mg",
+      "path": "/assets/sprites/characters/player/machine_gunner.svg"
+    },
+    {
+      "level": 9,
+      "name": "Grenadier",
+      "env": "daytime",
+      "arch": "grenade",
+      "path": "/assets/sprites/characters/player/grenadier.svg"
+    },
+    {
+      "level": 10,
+      "name": "Tank Commander",
+      "env": "daytime",
+      "arch": "tank",
+      "path": "/assets/sprites/characters/player/tank_commander.svg"
+    },
+    {
+      "level": 11,
+      "name": "Night Stalker",
+      "env": "nighttime",
+      "arch": "stealth",
+      "path": "/assets/sprites/characters/player/night_stalker.svg"
+    },
+    {
+      "level": 12,
+      "name": "Shadow Sniper",
+      "env": "nighttime",
+      "arch": "sniper",
+      "path": "/assets/sprites/characters/player/shadow_sniper.svg"
+    },
+    {
+      "level": 13,
+      "name": "Stealth Operative",
+      "env": "nighttime",
+      "arch": "stealth",
+      "path": "/assets/sprites/characters/player/stealth_operative.svg"
+    },
+    {
+      "level": 14,
+      "name": "Night Vision Gunner",
+      "env": "nighttime",
+      "arch": "nv",
+      "path": "/assets/sprites/characters/player/night_vision_gunner.svg"
+    },
+    {
+      "level": 15,
+      "name": "Tactical Assassin",
+      "env": "nighttime",
+      "arch": "assassin",
+      "path": "/assets/sprites/characters/player/tactical_assassin.svg"
+    },
+    {
+      "level": 16,
+      "name": "Silent Ranger",
+      "env": "nighttime",
+      "arch": "rifle",
+      "path": "/assets/sprites/characters/player/silent_ranger.svg"
+    },
+    {
+      "level": 17,
+      "name": "Phantom Trooper",
+      "env": "nighttime",
+      "arch": "phantom",
+      "path": "/assets/sprites/characters/player/phantom_trooper.svg"
+    },
+    {
+      "level": 18,
+      "name": "Recon Specialist",
+      "env": "nighttime",
+      "arch": "recon",
+      "path": "/assets/sprites/characters/player/recon_specialist.svg"
+    },
+    {
+      "level": 19,
+      "name": "Night Hunter",
+      "env": "nighttime",
+      "arch": "hunter",
+      "path": "/assets/sprites/characters/player/night_hunter.svg"
+    },
+    {
+      "level": 20,
+      "name": "Shadow Commander",
+      "env": "nighttime",
+      "arch": "commander",
+      "path": "/assets/sprites/characters/player/shadow_commander.svg"
+    },
+    {
+      "level": 21,
+      "name": "Marine Rifleman",
+      "env": "flooded",
+      "arch": "rifle",
+      "path": "/assets/sprites/characters/player/marine_rifleman.svg"
+    },
+    {
+      "level": 22,
+      "name": "Depth Diver",
+      "env": "flooded",
+      "arch": "diver",
+      "path": "/assets/sprites/characters/player/depth_diver.svg"
+    },
+    {
+      "level": 23,
+      "name": "Torpedo Soldier",
+      "env": "flooded",
+      "arch": "torpedo",
+      "path": "/assets/sprites/characters/player/torpedo_soldier.svg"
+    },
+    {
+      "level": 24,
+      "name": "Hydro Gunner",
+      "env": "flooded",
+      "arch": "mg",
+      "path": "/assets/sprites/characters/player/hydro_gunner.svg"
+    },
+    {
+      "level": 25,
+      "name": "Amphibious Trooper",
+      "env": "flooded",
+      "arch": "rifle",
+      "path": "/assets/sprites/characters/player/amphibious_trooper.svg"
+    },
+    {
+      "level": 26,
+      "name": "Naval Sniper",
+      "env": "flooded",
+      "arch": "sniper",
+      "path": "/assets/sprites/characters/player/naval_sniper.svg"
+    },
+    {
+      "level": 27,
+      "name": "Submarine Engineer",
+      "env": "flooded",
+      "arch": "engineer",
+      "path": "/assets/sprites/characters/player/submarine_engineer.svg"
+    },
+    {
+      "level": 28,
+      "name": "Aqua Grenadier",
+      "env": "flooded",
+      "arch": "grenade",
+      "path": "/assets/sprites/characters/player/aqua_grenadier.svg"
+    },
+    {
+      "level": 29,
+      "name": "Sea Raider",
+      "env": "flooded",
+      "arch": "raider",
+      "path": "/assets/sprites/characters/player/sea_raider.svg"
+    },
+    {
+      "level": 30,
+      "name": "Admiral Defender",
+      "env": "flooded",
+      "arch": "commander",
+      "path": "/assets/sprites/characters/player/admiral_defender.svg"
+    },
+    {
+      "level": 31,
+      "name": "Fog Recon",
+      "env": "foggy",
+      "arch": "recon",
+      "path": "/assets/sprites/characters/player/fog_recon.svg"
+    },
+    {
+      "level": 32,
+      "name": "Mist Sniper",
+      "env": "foggy",
+      "arch": "sniper",
+      "path": "/assets/sprites/characters/player/mist_sniper.svg"
+    },
+    {
+      "level": 33,
+      "name": "Smoke Trooper",
+      "env": "foggy",
+      "arch": "rifle",
+      "path": "/assets/sprites/characters/player/smoke_trooper.svg"
+    },
+    {
+      "level": 34,
+      "name": "Radar Specialist",
+      "env": "foggy",
+      "arch": "radar",
+      "path": "/assets/sprites/characters/player/radar_specialist.svg"
+    },
+    {
+      "level": 35,
+      "name": "Chemical Warfare Soldier",
+      "env": "foggy",
+      "arch": "chem",
+      "path": "/assets/sprites/characters/player/chemical_warfare_soldier.svg"
+    },
+    {
+      "level": 36,
+      "name": "Ghost Gunner",
+      "env": "foggy",
+      "arch": "phantom",
+      "path": "/assets/sprites/characters/player/ghost_gunner.svg"
+    },
+    {
+      "level": 37,
+      "name": "Fog Bomber",
+      "env": "foggy",
+      "arch": "bomb",
+      "path": "/assets/sprites/characters/player/fog_bomber.svg"
+    },
+    {
+      "level": 38,
+      "name": "Tactical Spotter",
+      "env": "foggy",
+      "arch": "spotter",
+      "path": "/assets/sprites/characters/player/tactical_spotter.svg"
+    },
+    {
+      "level": 39,
+      "name": "Specter Ranger",
+      "env": "foggy",
+      "arch": "phantom",
+      "path": "/assets/sprites/characters/player/specter_ranger.svg"
+    },
+    {
+      "level": 40,
+      "name": "Phantom Commander",
+      "env": "foggy",
+      "arch": "commander",
+      "path": "/assets/sprites/characters/player/phantom_commander.svg"
+    },
+    {
+      "level": 41,
+      "name": "Hazmat Trooper",
+      "env": "radioactive",
+      "arch": "hazmat",
+      "path": "/assets/sprites/characters/player/hazmat_trooper.svg"
+    },
+    {
+      "level": 42,
+      "name": "Radiation Gunner",
+      "env": "radioactive",
+      "arch": "mg",
+      "path": "/assets/sprites/characters/player/radiation_gunner.svg"
+    },
+    {
+      "level": 43,
+      "name": "Plasma Soldier",
+      "env": "radioactive",
+      "arch": "plasma",
+      "path": "/assets/sprites/characters/player/plasma_soldier.svg"
+    },
+    {
+      "level": 44,
+      "name": "Nuclear Engineer",
+      "env": "radioactive",
+      "arch": "engineer",
+      "path": "/assets/sprites/characters/player/nuclear_engineer.svg"
+    },
+    {
+      "level": 45,
+      "name": "Mutant Hunter",
+      "env": "radioactive",
+      "arch": "hunter",
+      "path": "/assets/sprites/characters/player/mutant_hunter.svg"
+    },
+    {
+      "level": 46,
+      "name": "Atomic Sniper",
+      "env": "radioactive",
+      "arch": "sniper",
+      "path": "/assets/sprites/characters/player/atomic_sniper.svg"
+    },
+    {
+      "level": 47,
+      "name": "Reactor Guard",
+      "env": "radioactive",
+      "arch": "shield",
+      "path": "/assets/sprites/characters/player/reactor_guard.svg"
+    },
+    {
+      "level": 48,
+      "name": "Biohazard Specialist",
+      "env": "radioactive",
+      "arch": "chem",
+      "path": "/assets/sprites/characters/player/biohazard_specialist.svg"
+    },
+    {
+      "level": 49,
+      "name": "Radiation Destroyer",
+      "env": "radioactive",
+      "arch": "heavy",
+      "path": "/assets/sprites/characters/player/radiation_destroyer.svg"
+    },
+    {
+      "level": 50,
+      "name": "Planetary Guardian",
+      "env": "radioactive",
+      "arch": "commander",
+      "path": "/assets/sprites/characters/player/planetary_guardian.svg"
+    }
+  ],
+  "enemies": [
+    {
+      "level": 1,
+      "name": "Vex Drone",
+      "env": "daytime",
+      "arch": "grunt",
+      "path": "/assets/sprites/characters/enemy/vex_drone.svg"
+    },
+    {
+      "level": 1,
+      "name": "Vex Flag Bearer",
+      "env": "daytime",
+      "arch": "flagbearer",
+      "path": "/assets/sprites/characters/enemy/vex_flag_bearer.svg"
+    },
+    {
+      "level": 2,
+      "name": "Alien Grunt",
+      "env": "daytime",
+      "arch": "grunt",
+      "path": "/assets/sprites/characters/enemy/alien_grunt.svg"
+    },
+    {
+      "level": 3,
+      "name": "Void Stalker",
+      "env": "daytime",
+      "arch": "stalker",
+      "path": "/assets/sprites/characters/enemy/void_stalker.svg"
+    },
+    {
+      "level": 4,
+      "name": "Brute Invader",
+      "env": "daytime",
+      "arch": "brute",
+      "path": "/assets/sprites/characters/enemy/brute_invader.svg"
+    },
+    {
+      "level": 5,
+      "name": "Plasma Launcher",
+      "env": "daytime",
+      "arch": "launcher",
+      "path": "/assets/sprites/characters/enemy/plasma_launcher.svg"
+    },
+    {
+      "level": 6,
+      "name": "Life Drainer",
+      "env": "daytime",
+      "arch": "drainer",
+      "path": "/assets/sprites/characters/enemy/life_drainer.svg"
+    },
+    {
+      "level": 7,
+      "name": "Barrier Drone",
+      "env": "daytime",
+      "arch": "drone",
+      "path": "/assets/sprites/characters/enemy/barrier_drone.svg"
+    },
+    {
+      "level": 8,
+      "name": "Swarm Shooter",
+      "env": "daytime",
+      "arch": "gunner",
+      "path": "/assets/sprites/characters/enemy/swarm_shooter.svg"
+    },
+    {
+      "level": 9,
+      "name": "Acid Bomber",
+      "env": "daytime",
+      "arch": "bomber",
+      "path": "/assets/sprites/characters/enemy/acid_bomber.svg"
+    },
+    {
+      "level": 10,
+      "name": "Siege Behemoth",
+      "env": "daytime",
+      "arch": "behemoth",
+      "path": "/assets/sprites/characters/enemy/siege_behemoth.svg"
+    },
+    {
+      "level": 11,
+      "name": "Dusk Reaper",
+      "env": "nighttime",
+      "arch": "reaper",
+      "path": "/assets/sprites/characters/enemy/dusk_reaper.svg"
+    },
+    {
+      "level": 12,
+      "name": "Darkmatter Sniper",
+      "env": "nighttime",
+      "arch": "marksman",
+      "path": "/assets/sprites/characters/enemy/darkmatter_sniper.svg"
+    },
+    {
+      "level": 13,
+      "name": "Cloak Phantom",
+      "env": "nighttime",
+      "arch": "phantom",
+      "path": "/assets/sprites/characters/enemy/cloak_phantom.svg"
+    },
+    {
+      "level": 14,
+      "name": "Eclipse Gunner",
+      "env": "nighttime",
+      "arch": "gunner",
+      "path": "/assets/sprites/characters/enemy/eclipse_gunner.svg"
+    },
+    {
+      "level": 15,
+      "name": "Void Assassin",
+      "env": "nighttime",
+      "arch": "assassin",
+      "path": "/assets/sprites/characters/enemy/void_assassin.svg"
+    },
+    {
+      "level": 16,
+      "name": "Silent Predator",
+      "env": "nighttime",
+      "arch": "predator",
+      "path": "/assets/sprites/characters/enemy/silent_predator.svg"
+    },
+    {
+      "level": 17,
+      "name": "Spectral Warrior",
+      "env": "nighttime",
+      "arch": "phantom",
+      "path": "/assets/sprites/characters/enemy/spectral_warrior.svg"
+    },
+    {
+      "level": 18,
+      "name": "Seeker Drone",
+      "env": "nighttime",
+      "arch": "drone",
+      "path": "/assets/sprites/characters/enemy/seeker_drone.svg"
+    },
+    {
+      "level": 19,
+      "name": "Moonfang Hunter",
+      "env": "nighttime",
+      "arch": "hunter",
+      "path": "/assets/sprites/characters/enemy/moonfang_hunter.svg"
+    },
+    {
+      "level": 20,
+      "name": "Overlord of Darkness",
+      "env": "nighttime",
+      "arch": "overlord",
+      "path": "/assets/sprites/characters/enemy/overlord_of_darkness.svg"
+    },
+    {
+      "level": 21,
+      "name": "Abyssal Grunt",
+      "env": "flooded",
+      "arch": "grunt",
+      "path": "/assets/sprites/characters/enemy/abyssal_grunt.svg"
+    },
+    {
+      "level": 22,
+      "name": "Deepsea Stalker",
+      "env": "flooded",
+      "arch": "stalker",
+      "path": "/assets/sprites/characters/enemy/deepsea_stalker.svg"
+    },
+    {
+      "level": 23,
+      "name": "Tidal Tormentor",
+      "env": "flooded",
+      "arch": "brute",
+      "path": "/assets/sprites/characters/enemy/tidal_tormentor.svg"
+    },
+    {
+      "level": 24,
+      "name": "Hydro-Spitter",
+      "env": "flooded",
+      "arch": "spitter",
+      "path": "/assets/sprites/characters/enemy/hydro_spitter.svg"
+    },
+    {
+      "level": 25,
+      "name": "Amphibious Ravager",
+      "env": "flooded",
+      "arch": "predator",
+      "path": "/assets/sprites/characters/enemy/amphibious_ravager.svg"
+    },
+    {
+      "level": 26,
+      "name": "Leviathan Marksman",
+      "env": "flooded",
+      "arch": "marksman",
+      "path": "/assets/sprites/characters/enemy/leviathan_marksman.svg"
+    },
+    {
+      "level": 27,
+      "name": "Abyssal Mechanic",
+      "env": "flooded",
+      "arch": "mechanic",
+      "path": "/assets/sprites/characters/enemy/abyssal_mechanic.svg"
+    },
+    {
+      "level": 28,
+      "name": "Toxic Tide Bomber",
+      "env": "flooded",
+      "arch": "bomber",
+      "path": "/assets/sprites/characters/enemy/toxic_tide_bomber.svg"
+    },
+    {
+      "level": 29,
+      "name": "Reef Raider",
+      "env": "flooded",
+      "arch": "raider",
+      "path": "/assets/sprites/characters/enemy/reef_raider.svg"
+    },
+    {
+      "level": 30,
+      "name": "Abyssal Warlord",
+      "env": "flooded",
+      "arch": "overlord",
+      "path": "/assets/sprites/characters/enemy/abyssal_warlord.svg"
+    },
+    {
+      "level": 31,
+      "name": "Mist Seeker",
+      "env": "foggy",
+      "arch": "seeker",
+      "path": "/assets/sprites/characters/enemy/mist_seeker.svg"
+    },
+    {
+      "level": 32,
+      "name": "Phantom Marksman",
+      "env": "foggy",
+      "arch": "marksman",
+      "path": "/assets/sprites/characters/enemy/phantom_marksman.svg"
+    },
+    {
+      "level": 33,
+      "name": "Smog Invader",
+      "env": "foggy",
+      "arch": "grunt",
+      "path": "/assets/sprites/characters/enemy/smog_invader.svg"
+    },
+    {
+      "level": 34,
+      "name": "Signal Jammer",
+      "env": "foggy",
+      "arch": "jammer",
+      "path": "/assets/sprites/characters/enemy/signal_jammer.svg"
+    },
+    {
+      "level": 35,
+      "name": "Toxic Mutator",
+      "env": "foggy",
+      "arch": "mutator",
+      "path": "/assets/sprites/characters/enemy/toxic_mutator.svg"
+    },
+    {
+      "level": 36,
+      "name": "Wraith Gunner",
+      "env": "foggy",
+      "arch": "phantom",
+      "path": "/assets/sprites/characters/enemy/wraith_gunner.svg"
+    },
+    {
+      "level": 37,
+      "name": "Mist Bomber",
+      "env": "foggy",
+      "arch": "bomber",
+      "path": "/assets/sprites/characters/enemy/mist_bomber.svg"
+    },
+    {
+      "level": 38,
+      "name": "Alien Pathfinder",
+      "env": "foggy",
+      "arch": "pathfinder",
+      "path": "/assets/sprites/characters/enemy/alien_pathfinder.svg"
+    },
+    {
+      "level": 39,
+      "name": "Specter Hunter",
+      "env": "foggy",
+      "arch": "hunter",
+      "path": "/assets/sprites/characters/enemy/specter_hunter.svg"
+    },
+    {
+      "level": 40,
+      "name": "Ethereal Overlord",
+      "env": "foggy",
+      "arch": "overlord",
+      "path": "/assets/sprites/characters/enemy/ethereal_overlord.svg"
+    },
+    {
+      "level": 41,
+      "name": "Radwalker",
+      "env": "radioactive",
+      "arch": "walker",
+      "path": "/assets/sprites/characters/enemy/radwalker.svg"
+    },
+    {
+      "level": 42,
+      "name": "Gamma Gunner",
+      "env": "radioactive",
+      "arch": "gunner",
+      "path": "/assets/sprites/characters/enemy/gamma_gunner.svg"
+    },
+    {
+      "level": 43,
+      "name": "Plasma Devourer",
+      "env": "radioactive",
+      "arch": "devourer",
+      "path": "/assets/sprites/characters/enemy/plasma_devourer.svg"
+    },
+    {
+      "level": 44,
+      "name": "Reactor Parasite",
+      "env": "radioactive",
+      "arch": "parasite",
+      "path": "/assets/sprites/characters/enemy/reactor_parasite.svg"
+    },
+    {
+      "level": 45,
+      "name": "Mutant Stalker",
+      "env": "radioactive",
+      "arch": "stalker",
+      "path": "/assets/sprites/characters/enemy/mutant_stalker.svg"
+    },
+    {
+      "level": 46,
+      "name": "Quantum Marksman",
+      "env": "radioactive",
+      "arch": "marksman",
+      "path": "/assets/sprites/characters/enemy/quantum_marksman.svg"
+    },
+    {
+      "level": 47,
+      "name": "Core Guardian",
+      "env": "radioactive",
+      "arch": "guardian",
+      "path": "/assets/sprites/characters/enemy/core_guardian.svg"
+    },
+    {
+      "level": 48,
+      "name": "Biohazard Abomination",
+      "env": "radioactive",
+      "arch": "abomination",
+      "path": "/assets/sprites/characters/enemy/biohazard_abomination.svg"
+    },
+    {
+      "level": 49,
+      "name": "Radiation Colossus",
+      "env": "radioactive",
+      "arch": "behemoth",
+      "path": "/assets/sprites/characters/enemy/radiation_colossus.svg"
+    },
+    {
+      "level": 50,
+      "name": "Galactic Devastator",
+      "env": "radioactive",
+      "arch": "devastator",
+      "path": "/assets/sprites/characters/enemy/galactic_devastator.svg"
+    }
+  ]
+}

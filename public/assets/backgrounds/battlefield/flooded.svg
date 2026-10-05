@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600">
+  <defs>
+    <linearGradient id="floodSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#607f91"/><stop offset="1" stop-color="#a9c4c4"/></linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#286573"/><stop offset="1" stop-color="#173e4b"/></linearGradient>
+  </defs>
+  <rect width="960" height="160" fill="url(#floodSky)"/>
+  <path d="M0 118 Q120 96 240 118 T480 115 T720 116 T960 110 V160 H0Z" fill="#d6e0dc" opacity=".36"/>
+  <rect y="160" width="960" height="360" fill="url(#water)"/>
+  <g fill="none" stroke="#87d4d5" opacity=".22">
+    <path d="M0 190 Q90 180 180 190 T360 190 T540 190 T720 190 T900 190 T1080 190"/>
+    <path d="M40 266 Q120 256 200 266 T360 266 T520 266 T680 266 T840 266 T1000 266"/>
+    <path d="M0 340 Q100 330 200 340 T400 340 T600 340 T800 340 T1000 340"/>
+    <path d="M70 420 Q150 410 230 420 T390 420 T550 420 T710 420 T870 420 T1030 420"/>
+    <path d="M0 490 Q110 480 220 490 T440 490 T660 490 T880 490 T1100 490"/>
+  </g>
+  <g fill="#3f786d" opacity=".8"><path d="M40 166h7v-20h4v20h9v4H40zM785 165h8v-28h4v28h10v4h-22zM901 165h6v-18h4v18h8v4h-18z"/></g>
+  <rect y="520" width="960" height="80" fill="#354840"/>
+  <rect y="511" width="960" height="14" fill="#5d8279"/>
+  <g stroke="#8ed8d6" stroke-width="2" opacity=".35"><path d="M25 222h58M214 298h46M490 378h78M720 458h54"/></g>
+</svg>

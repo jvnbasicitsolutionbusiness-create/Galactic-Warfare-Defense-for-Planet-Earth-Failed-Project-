@@ -1,0 +1,26 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 14" width="32" height="14">
+  <!--
+    Fire-Lance Projectile — orange fire burst
+    Travels left→right. Core is hot yellow-white, surrounded by flame petals,
+    with a trailing ember streak. Matches fire_lance_gunner flame colour palette.
+    Colours: outer glow #ff6b00 | flame #ff6b00 | hot core #fef08a | streak #fbbf24
+  -->
+  <!-- Trailing ember streak -->
+  <ellipse cx="8" cy="7" rx="8" ry="3" fill="#ff6b00" opacity="0.25"/>
+  <ellipse cx="6" cy="7" rx="5" ry="2" fill="#fbbf24" opacity="0.35"/>
+  <!-- Outer glow ring -->
+  <circle cx="22" cy="7" r="6"   fill="#ff6b00" opacity="0.22"/>
+  <!-- Flame petals -->
+  <ellipse cx="19" cy="4" rx="5" ry="2.5" fill="#ff6b00" opacity="0.75" transform="rotate(-25 19 4)"/>
+  <ellipse cx="19" cy="10" rx="5" ry="2.5" fill="#ff6b00" opacity="0.75" transform="rotate(25 19 10)"/>
+  <ellipse cx="22" cy="7" rx="6"  ry="2"   fill="#ff8c00" opacity="0.85"/>
+  <!-- Core flame body -->
+  <circle cx="22" cy="7" r="4.5" fill="#ff6b00" opacity="0.95"/>
+  <!-- Hot inner core -->
+  <circle cx="22" cy="7" r="2.8" fill="#fef08a" opacity="0.9"/>
+  <!-- Bright hot centre -->
+  <circle cx="22" cy="7" r="1.4" fill="#ffffff" opacity="0.8"/>
+  <!-- Forward spark -->
+  <circle cx="28" cy="7" r="1.5" fill="#fef08a" opacity="0.6"/>
+  <circle cx="30" cy="7" r="1"   fill="#ff6b00" opacity="0.4"/>
+</svg>

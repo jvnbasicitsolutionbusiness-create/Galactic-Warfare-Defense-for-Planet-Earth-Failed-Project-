@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600">
+  <defs>
+    <linearGradient id="stormSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#111d32"/><stop offset="1" stop-color="#40566a"/></linearGradient>
+    <linearGradient id="stormSoil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#455144"/><stop offset="1" stop-color="#252f30"/></linearGradient>
+  </defs>
+  <rect width="960" height="160" fill="url(#stormSky)"/>
+  <g fill="#263448" opacity=".9"><ellipse cx="110" cy="46" rx="130" ry="43"/><ellipse cx="300" cy="28" rx="155" ry="48"/><ellipse cx="540" cy="46" rx="160" ry="43"/><ellipse cx="810" cy="29" rx="170" ry="50"/></g>
+  <g stroke="#b6d9e8" stroke-width="2" opacity=".28"><path d="M48 0 26 155M132 0 110 155M216 0 194 155M300 0 278 155M384 0 362 155M468 0 446 155M552 0 530 155M636 0 614 155M720 0 698 155M804 0 782 155M888 0 866 155"/></g>
+  <path d="M604 24 575 76h24l-19 42 55-63h-26l21-31z" fill="#d9f6ff" opacity=".48"/>
+  <rect y="160" width="960" height="360" fill="#283a3d"/>
+  <g opacity=".18"><rect y="160" width="960" height="72" fill="#73869a"/><rect y="304" width="960" height="72" fill="#73869a"/><rect y="448" width="960" height="72" fill="#73869a"/></g>
+  <g stroke="#96b6c1" stroke-width="1" opacity=".3"><path d="M80 170 54 228M178 170 152 228M340 242 314 300M502 314 476 372M684 386 658 444M838 458 812 516"/></g>
+  <rect y="520" width="960" height="80" fill="url(#stormSoil)"/>
+  <rect y="511" width="960" height="14" fill="#40534e"/>
+  <g fill="#b8d7df" opacity=".24"><ellipse cx="160" cy="548" rx="75" ry="8"/><ellipse cx="460" cy="570" rx="110" ry="7"/><ellipse cx="790" cy="540" rx="84" ry="9"/></g>
+</svg>

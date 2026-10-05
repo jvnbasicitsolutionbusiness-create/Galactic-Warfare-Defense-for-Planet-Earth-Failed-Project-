@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 116" role="img" aria-label="Crater raider alien">
+  <ellipse cx="49" cy="106" rx="25" ry="5" fill="#20140f" opacity=".5"/>
+  <path d="m34 72-7 18-12 11 15 2 12-14 8-1 9 15 15-2-11-12-5-18" fill="#813e30" stroke="#49281f" stroke-width="4"/>
+  <path d="M33 51q-18 2-20 17l11 14 18-7 16 7 13-14q-4-15-21-17" fill="#b65d3a" stroke="#713a2b" stroke-width="3"/>
+  <path d="m24 57-8 13m46-12 10 12" stroke="#e3a06c" stroke-width="6" stroke-linecap="round"/>
+  <path d="m30 19 8 9 7-17 8 16 12-11-2 28-17 12-18-8z" fill="#bf6840" stroke="#713a2b" stroke-width="3" stroke-linejoin="round"/>
+  <path d="m28 53 8-7 8 7 8-9 11 8-3 14-15 5-14-6z" fill="#8e4732"/>
+  <path d="m27 56 8-10 8 10 8-11 11 10" fill="none" stroke="#e3a06c" stroke-width="3"/>
+  <ellipse cx="39" cy="35" rx="4" ry="5" fill="#22140f"/><ellipse cx="56" cy="35" rx="4" ry="5" fill="#22140f"/>
+  <circle cx="40" cy="34" r="2" fill="#ffd36b"/><circle cx="57" cy="34" r="2" fill="#ffd36b"/>
+  <path d="M40 44h15" stroke="#49281f" stroke-width="3"/>
+  <path d="m31 80 15 6 13-7" fill="none" stroke="#e3a06c" stroke-width="3"/>
+</svg>

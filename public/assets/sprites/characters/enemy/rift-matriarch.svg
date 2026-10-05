@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 160" role="img" aria-label="Rift matriarch alien boss">
+  <ellipse cx="70" cy="151" rx="50" ry="7" fill="#071514" opacity=".7"/>
+  <path d="m49 111-7 25-20 11 25 3 15-20 15 21 26-3-21-12-8-27" fill="#245c58" stroke="#143936" stroke-width="5"/>
+  <path d="M45 75q-28 6-29 27l21 18 30-12 27 13 23-19q-8-22-35-27" fill="#347f75" stroke="#19524d" stroke-width="5"/>
+  <path d="m38 83-23 17m89-17 20 19" fill="none" stroke="#347f75" stroke-width="12" stroke-linecap="round"/>
+  <path d="M40 70q-8-30 11-45 22-14 43 4l3 36-27 17-24-7z" fill="#41988b" stroke="#1b5751" stroke-width="4"/>
+  <path d="m43 56-20-38 33 25m5 0 10-39 12 40m7 1 28-31-18 45m-46-4-23-9m74 10 23-14" fill="#57b8a7" stroke="#236961" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M47 53q8-10 17 0m7 0q8-10 17 0" fill="none" stroke="#79ffe0" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="55" cy="54" r="2.5" fill="#fff"/><circle cx="79" cy="54" r="2.5" fill="#fff"/>
+  <path d="M57 69q10 7 20 0" fill="none" stroke="#143936" stroke-width="4"/>
+  <path d="m47 102 23 10 23-11" fill="none" stroke="#69e3c8" stroke-width="5"/>
+  <circle cx="70" cy="99" r="12" fill="#183e3a"/><circle cx="70" cy="99" r="7" fill="#8ffff0"/><circle cx="68" cy="97" r="2.5" fill="#fff"/>
+  <path d="m27 115 18 4m51 1 18-5" stroke="#8ed7b5" stroke-width="4"/>
+  <path d="M32 33q-16 38-6 68m80-68q17 38 6 68" fill="none" stroke="#a0ffe5" stroke-width="2" opacity=".55"/>
+</svg>

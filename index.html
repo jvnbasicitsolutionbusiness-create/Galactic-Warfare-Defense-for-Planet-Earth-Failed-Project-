@@ -1,0 +1,691 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a3a0a" />
+  <meta name="description" content="Galactic Warfare: Defense for Planet Earth — Defend Earth against alien invasion." />
+  <title>Galactic Warfare: Defense for Planet Earth</title>
+
+  <!-- Adaptive network runtime — must load before the auth guard -->
+  <script src="public/js/runtime.js"></script>
+
+  <!-- ── Auth Guard ──────────────────────────────────────────
+       Must run BEFORE any other scripts or content renders.
+       1. No token → redirect to auth.html immediately (sync).
+       2. Token present → allow page, then verify in background;
+          invalidate silently so next load redirects correctly.
+  ──────────────────────────────────────────────────────────── -->
+  <script>
+  (function () {
+    // Support both old token key (gw_id_token) and new (gw_session_token)
+    var TOKEN_KEY  = 'gw_session_token';
+    var TOKEN_KEY2 = 'gw_id_token';
+    var AUTH_PAGE  = 'auth.html';
+    var token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY2);
+    var mode = sessionStorage.getItem('gw_mode');
+    var authorized = sessionStorage.getItem('gw_entry_authorized') === '1';
+    if (!authorized || (mode !== 'guest' && !token)) {
+      window.location.replace(AUTH_PAGE);
+      throw new Error('[Auth Guard] No session — redirecting to ' + AUTH_PAGE);
+    }
+    if (mode === 'guest') return;
+    // Background verify — non-blocking, adapts to backend OR direct mode.
+    setTimeout(function () {
+      if (!window.GWNet) return;
+      window.GWNet.verify(token)
+        .then(function (d) {
+          if (!d || !d.ok) {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(TOKEN_KEY2);
+            localStorage.removeItem('gw_user');
+            sessionStorage.removeItem('gw_entry_authorized');
+            sessionStorage.removeItem('gw_mode');
+            window.location.replace(AUTH_PAGE);
+          } else if (d.username || d.commanderName) {
+            try {
+              var u = JSON.parse(localStorage.getItem('gw_user') || '{}');
+              u.username = u.commanderName = d.commanderName || d.username;
+              localStorage.setItem('gw_user', JSON.stringify(u));
+            } catch (_) {}
+          }
+        })
+        .catch(function () {});
+    }, 800);
+  })();
+  </script>
+
+  <link rel="stylesheet" href="./public/css/main.css" />
+  <link rel="stylesheet" href="./public/css/menu.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="menu-page">
+
+  <!-- ═══════════════════════════════════════════════════════
+       INTRO LOADING SCREEN — shown on first page load
+       Animates in, then fades out before menu appears
+       ═══════════════════════════════════════════════════════ -->
+  <div id="intro-screen" role="status" aria-live="polite" aria-label="Loading Galactic Warfare: Defense for Planet Earth">
+
+    <!-- Animated background particles -->
+    <div class="intro-bg-orb intro-bg-orb--green"  aria-hidden="true"></div>
+    <div class="intro-bg-orb intro-bg-orb--purple" aria-hidden="true"></div>
+    <div class="intro-bg-orb intro-bg-orb--red"    aria-hidden="true"></div>
+    <div class="intro-scanlines"                   aria-hidden="true"></div>
+
+    <!-- Battle scene decoration (CSS drawn) -->
+    <div class="intro-scene" aria-hidden="true">
+      <div class="intro-base-structure"></div>
+      <div class="intro-alien-silhouette intro-alien-silhouette--1"></div>
+      <div class="intro-alien-silhouette intro-alien-silhouette--2"></div>
+      <div class="intro-alien-silhouette intro-alien-silhouette--3"></div>
+      <div class="intro-ground-line"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="intro-content">
+      <div class="intro-badge">INITIALIZING DEFENSE SYSTEMS</div>
+      <h1 class="intro-title">
+        <span class="intro-title-top">GALACTIC WARFARE</span>
+        <span class="intro-title-divider">✦</span>
+        <span class="intro-title-bottom">DEFENSE FOR PLANET EARTH</span>
+      </h1>
+      <p class="intro-subtitle">Defend Earth. Repel the Invasion.</p>
+
+      <div class="intro-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="introProgress">
+        <div class="intro-bar-fill" id="introBarFill"></div>
+        <div class="intro-bar-glow"></div>
+      </div>
+      <p class="intro-status" id="introStatus">Establishing uplink…</p>
+
+      <!-- Tactical threat display -->
+      <div class="intro-threat-row" aria-hidden="true">
+        <span class="intro-threat-dot"></span>
+        <span class="intro-threat-text">ALIEN SIGNAL DETECTED</span>
+        <span class="intro-threat-dot"></span>
+      </div>
+      <button class="loading-audio-toggle" type="button" data-audio-toggle aria-pressed="false">ENABLE SOUND</button>
+    </div>
+  </div>
+
+  <!-- Animated environmental background -->
+  <div class="bg-particles" id="bgParticles" aria-hidden="true"></div>
+  <div class="bg-scanlines" aria-hidden="true"></div>
+
+  <!-- Two-column layout -->
+  <div class="page-layout">
+
+    <!-- Main Menu Column -->
+    <div class="menu-wrapper" id="menuWrapper">
+
+      <header class="menu-header" role="banner">
+        <div class="title-glow-ring" aria-hidden="true"></div>
+        <h1 class="game-title">
+          <span class="title-top">GALACTIC WARFARE</span>
+          <span class="title-divider" aria-hidden="true">
+            <span class="divider-line"></span>
+            <span class="divider-icon">✦</span>
+            <span class="divider-line"></span>
+          </span>
+          <span class="title-bottom">DEFENSE FOR PLANET EARTH</span>
+        </h1>
+        <p class="game-subtitle">Deploy. Collect. Defend. Repel the Invasion.</p>
+        <div class="signal-row" aria-hidden="true">
+          <span class="signal-dot signal-dot--active"></span>
+          <span class="signal-text">ALIEN SIGNAL DETECTED</span>
+          <span class="signal-dot signal-dot--active"></span>
+        </div>
+        <!-- Player greeting (populated by menu.js) -->
+        <div class="player-greeting" id="playerGreeting" aria-live="polite"></div>
+      </header>
+
+      <nav class="menu-nav" role="navigation" aria-label="Main Menu">
+
+        <!-- 1. ADVENTURE — always unlocked -->
+        <button class="menu-btn menu-btn--primary" id="btnAdventure" aria-label="Adventure Mode">
+          <span class="btn-icon">🌿</span>
+          <span class="btn-label">ADVENTURE</span>
+          <span class="btn-shine" aria-hidden="true"></span>
+        </button>
+
+        <!-- 2. SURVIVAL / ENDLESS -->
+        <button class="menu-btn menu-btn--secondary menu-btn--lockable" id="btnSurvival" aria-label="Survival and Endless Mode">
+          <span class="btn-icon">🛡</span>
+          <span class="btn-label">SURVIVAL / ENDLESS</span>
+          <span class="btn-lock-icon" id="lockSurvival" aria-hidden="true">🔒</span>
+        </button>
+
+        <!-- Row: MINI-GAMES + PUZZLE -->
+        <div class="menu-btn-row">
+          <button class="menu-btn menu-btn--secondary menu-btn--lockable" id="btnMiniGames" aria-label="Mini-Games">
+            <span class="btn-icon">🎮</span>
+            <span class="btn-label">MINI-GAMES</span>
+            <span class="btn-lock-icon" id="lockMiniGames" aria-hidden="true">🔒</span>
+          </button>
+          <button class="menu-btn menu-btn--secondary menu-btn--lockable" id="btnPuzzle" aria-label="Puzzle Mode">
+            <span class="btn-icon">🧩</span>
+            <span class="btn-label">PUZZLE</span>
+            <span class="btn-lock-icon" id="lockPuzzle" aria-hidden="true">🔒</span>
+          </button>
+        </div>
+
+        <!-- CHARACTERS PROFILE -->
+        <button class="menu-btn menu-btn--secondary menu-btn--lockable" id="btnProfiles" aria-label="Characters Profile">
+          <span class="btn-icon">🪖</span>
+          <span class="btn-label">CHARACTERS PROFILE</span>
+          <span class="btn-lock-icon" id="lockProfiles" aria-hidden="true">🔒</span>
+        </button>
+
+        <!-- Row: EXTRAS + SETTINGS -->
+        <div class="menu-btn-row">
+          <button class="menu-btn menu-btn--secondary" id="btnExtras" aria-label="Extras">
+            <span class="btn-icon">📡</span>
+            <span class="btn-label">EXTRAS</span>
+          </button>
+          <button class="menu-btn menu-btn--secondary" id="btnSettings" aria-label="Settings">
+            <span class="btn-icon">⚙</span>
+            <span class="btn-label">SETTINGS</span>
+          </button>
+        </div>
+
+        <!-- Row: CREDITS + LOG OUT -->
+        <div class="menu-btn-row">
+          <button class="menu-btn menu-btn--tertiary" id="btnCredits" aria-label="Credits">
+            <span class="btn-label">CREDITS</span>
+          </button>
+          <button class="menu-btn menu-btn--tertiary menu-btn--quit" id="btnQuit" aria-label="Log out">
+            <span class="btn-label">LOG OUT</span>
+          </button>
+        </div>
+
+      </nav>
+
+      <footer class="menu-footer" role="contentinfo">
+        <span class="version-tag">v1.0.1 · Galactic Warfare: Defense for Planet Earth · All content original</span>
+      </footer>
+
+    </div><!-- /.menu-wrapper -->
+
+    <!-- Coming Soon Card -->
+    <aside class="coming-soon-card" aria-label="Upcoming game announcement">
+      <div class="cs-badge">COMING SOON</div>
+      <div class="cs-logo-area" aria-hidden="true">
+        <div class="cs-logo-ring"></div>
+        <div class="cs-logo-icon">🌌</div>
+      </div>
+      <h2 class="cs-title">CHRONO-FRONT</h2>
+      <p class="cs-subtitle">ECHOES OF WAR</p>
+      <p class="cs-description">
+        A new strategic experience in the Chrono-Front universe.<br/>
+        <span class="cs-hint">Temporal tactical combat. Master time. Conquer the galaxy.</span>
+      </p>
+      <div class="cs-tags">
+        <span class="cs-tag">Strategy</span>
+        <span class="cs-tag">Card Game</span>
+        <span class="cs-tag">NEW</span>
+      </div>
+      <button class="cs-notify-btn" id="btnNotify" aria-label="Notify me about Heroes of Earth">NOTIFY ME</button>
+    </aside>
+
+  </div><!-- /.page-layout -->
+
+  <!-- ══════════════════════════════════════════════════════
+       OVERLAYS
+       ══════════════════════════════════════════════════════ -->
+
+  <!-- First-visit player name setup -->
+  <div class="overlay" id="newPlayerOverlay" role="dialog" aria-modal="true" aria-labelledby="npTitle" hidden>
+    <div class="overlay-box overlay-box--new-player">
+      <div class="np-logo">🌿</div>
+      <h2 class="overlay-title" id="npTitle">WELCOME, COMMANDER</h2>
+      <p class="overlay-body">Earth's garden defenses need a leader.<br/>Enter your name to begin.</p>
+      <div class="np-input-row">
+        <input type="text" id="playerNameInput" class="np-input"
+          placeholder="Commander Name"
+          maxlength="24"
+          aria-label="Enter your commander name"
+          autocomplete="off"
+          spellcheck="false" />
+      </div>
+      <div class="np-error" id="npError" aria-live="polite"></div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnStartGame" aria-label="Begin your adventure">
+        <span class="btn-label">BEGIN ADVENTURE ▶</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Adventure / Levels overlay -->
+  <div class="overlay" id="adventureOverlay" role="dialog" aria-modal="true" aria-labelledby="advTitle" hidden>
+    <div class="overlay-box overlay-box--fullscreen">
+      <h2 class="overlay-title" id="advTitle">🌿 ADVENTURE MODE</h2>
+      <p class="overlay-subtitle">Earth's garden defense campaign — 50 levels across 5 environments</p>
+      <div class="levels-phase-tabs" id="levelsPhaseTabs" role="tablist">
+        <button class="phase-tab phase-tab--active" data-phase="daytime"      role="tab">☀ Daytime (1-10)</button>
+        <button class="phase-tab"                   data-phase="nighttime"    role="tab">🌙 Nighttime (11-20)</button>
+        <button class="phase-tab"                   data-phase="foggy"        role="tab">🌊 Flooded (21-30)</button>
+        <button class="phase-tab"                   data-phase="rainy_stormy" role="tab">⛈ Storm (31-40)</button>
+        <button class="phase-tab"                   data-phase="radioactive"  role="tab">☢ Radioactive (41-50)</button>
+      </div>
+      <div class="levels-grid" id="levelsGrid"></div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnAdvClose" aria-label="Close">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Characters Profile overlay -->
+  <div class="overlay" id="profilesOverlay" role="dialog" aria-modal="true" aria-labelledby="profTitle" hidden>
+    <div class="overlay-box overlay-box--wide">
+      <h2 class="overlay-title" id="profTitle">🪖 CHARACTERS PROFILE</h2>
+      <div class="chars-tabs" role="tablist">
+        <button class="char-tab char-tab--active" id="tabMilitary" role="tab">⚔ MILITARY</button>
+        <button class="char-tab" id="tabAliens" role="tab">👾 ALIENS</button>
+      </div>
+      <div id="profilePanelMilitary" class="chars-panel chars-panel--active">
+        <div class="chars-grid" id="militaryGrid"></div>
+      </div>
+      <div id="profilePanelAliens" class="chars-panel" hidden>
+        <div class="chars-grid" id="aliensGrid"></div>
+      </div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnProfilesClose" aria-label="Close">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Locked mode overlay -->
+  <div class="overlay" id="lockedOverlay" role="dialog" aria-modal="true" aria-labelledby="lockedTitle" hidden>
+    <div class="overlay-box">
+      <div class="locked-icon">🔒</div>
+      <h2 class="overlay-title" id="lockedTitle">LOCKED</h2>
+      <p class="overlay-body" id="lockedMsg">Complete more Adventure levels to unlock this mode.</p>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnLockedClose" aria-label="Close">
+        <span class="btn-label">UNDERSTOOD</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Survival / Endless -->
+  <div class="overlay" id="survivalOverlay" role="dialog" aria-modal="true" aria-labelledby="svTitle" hidden>
+    <div class="overlay-box overlay-box--wide">
+      <h2 class="overlay-title" id="svTitle">🛡 SURVIVAL / ENDLESS</h2>
+      <div class="survival-modes-row">
+        <div class="survival-section">
+          <h3 class="survival-section-title">SURVIVAL SCENARIOS</h3>
+          <div class="mode-grid" id="survivalGrid"></div>
+        </div>
+        <div class="survival-section">
+          <h3 class="survival-section-title">ENDLESS SURVIVAL</h3>
+          <button class="endless-card" id="btnEndless" aria-label="Endless Survival">
+            <div class="endless-icon">∞</div>
+            <div class="endless-name">ENDLESS SURVIVAL</div>
+            <div class="endless-desc">Waves never stop. Survive as long as possible.</div>
+            <div class="endless-score" id="endlessScore">Best: Wave 0</div>
+          </button>
+        </div>
+      </div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnSurvivalClose" aria-label="Close">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mini-Games -->
+  <div class="overlay" id="miniGamesOverlay" role="dialog" aria-modal="true" aria-labelledby="mgTitle" hidden>
+    <div class="overlay-box overlay-box--wide">
+      <h2 class="overlay-title" id="mgTitle">🎮 MINI-GAMES</h2>
+      <p class="overlay-subtitle">20 unique challenge modes</p>
+      <div class="mode-grid" id="miniGamesGrid"></div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnMGClose" aria-label="Close">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Puzzle -->
+  <div class="overlay" id="puzzleOverlay" role="dialog" aria-modal="true" aria-labelledby="pzTitle" hidden>
+    <div class="overlay-box overlay-box--wide">
+      <h2 class="overlay-title" id="pzTitle">🧩 PUZZLE MODE</h2>
+      <p class="overlay-subtitle">18 strategic puzzle stages</p>
+      <div class="mode-grid" id="puzzleGrid"></div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnPuzzleClose" aria-label="Close">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Extras -->
+  <div class="overlay" id="creditsOverlay" role="dialog" aria-modal="true" aria-labelledby="creditsTitle" hidden>
+    <div class="overlay-box overlay-box--wide">
+      <h2 class="overlay-title" id="creditsTitle">🏅 CREDITS &amp; GAME INFORMATION</h2>
+
+      <!-- Tab nav -->
+      <div class="extras-tabs" role="tablist" style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+        <button class="menu-btn extras-tab-btn extras-tab--active" data-extab="patchnotes"  role="tab" style="flex:1;min-width:100px">📋 PATCH NOTES</button>
+        <button class="menu-btn extras-tab-btn" data-extab="gameinfo"   role="tab" style="flex:1;min-width:100px">🎮 GAME INFO</button>
+        <button class="menu-btn extras-tab-btn" data-extab="database"   role="tab" style="flex:1;min-width:100px">🗄 DATABASE</button>
+        <button class="menu-btn extras-tab-btn" data-extab="credits"    role="tab" style="flex:1;min-width:100px">🏅 CREDITS</button>
+      </div>
+
+      <!-- ── PATCH NOTES ──────────────────────────────────────────────────── -->
+      <div class="extras-panel" id="extab-patchnotes" style="overflow-y:auto;max-height:340px">
+        <h3 style="color:#86efac;margin:0 0 6px">UPDATE v1.0.1 — BATTLEFIELD BALANCING &amp; GAMEPLAY IMPROVEMENTS</h3>
+        <p style="color:#6b7280;font-size:11px;margin:0 0 10px">Released alongside the official rename to <strong style="color:#c4b5fd">GALACTIC WARFARE: DEFENSE FOR PLANET EARTH</strong>.</p>
+
+        <h4 style="color:#fbbf24;margin:8px 0 4px">⚔ NEW FEATURES &amp; ADJUSTMENTS</h4>
+        <ul style="color:#d1fae5;font-size:11px;line-height:1.7;padding-left:18px;margin:0 0 10px">
+          <li>Common Aliens now use their purple stick as a real melee weapon with a swing animation.</li>
+          <li>Stick attacks have a 2–3 s delay between swings (no rapid-fire repeat hits).</li>
+          <li>Fire-Lancers now shoot animated 2D fire projectiles — a visible fiery cannon blast.</li>
+          <li>The battlefield progress indicator is renamed to <strong>Invasion Progress</strong>.</li>
+          <li>Invasion Progress bar is shortened and centred — no more sudden jumps to the red flag.</li>
+          <li>P.E. Generators now show a charge ring before production and spawn a real collectible orb.</li>
+          <li>Plasma energy collection animates the orb toward the upper-left collector box.</li>
+          <li>Currency (coins/silver/bronze/gold) animates toward its collector box on collection.</li>
+          <li>The plasma energy collector no longer generates energy on its own — only collected orbs count.</li>
+          <li>After the first 5 following aliens, subsequent following aliens spawn freely at 8–12 s intervals.</li>
+          <li>Fire-Lancers and future ranged attackers can target visible enemies anywhere in their range, including the alien zone.</li>
+        </ul>
+
+        <h4 style="color:#f87171;margin:8px 0 4px">📉 NERFS</h4>
+        <ul style="color:#fecaca;font-size:11px;line-height:1.7;padding-left:18px;margin:0 0 10px">
+          <li>P.E. Generator production interval increased to <strong>15–20 s</strong> (was 10–12 s).</li>
+          <li>Random plasma energy spawn interval changed to exactly <strong>20 s</strong> (was 15–20 s).</li>
+          <li>Default Common Rarity card deploy cooldown increased to <strong>10 s</strong> (was 7.5 s).</li>
+          <li>Common Alien baseline movement speed reduced to <strong>0.80×</strong>.</li>
+          <li>Fire-Lancer HP reduced from 100 to <strong>75 HP</strong>.</li>
+          <li>P.E. Generator HP reduced from 100 to <strong>50 HP</strong>.</li>
+        </ul>
+
+        <h4 style="color:#4ade80;margin:8px 0 4px">📈 BUFFS</h4>
+        <ul style="color:#bbf7d0;font-size:11px;line-height:1.7;padding-left:18px;margin:0 0 10px">
+          <li>Common Alien HP increased from 100 to <strong>200 HP</strong>.</li>
+          <li>Common Alien base stick attack damage set to <strong>20</strong>.</li>
+          <li>Common Alien damage scales up to +50% as HP decreases (reaching ~30 dmg at critical HP).</li>
+          <li>Pinkish red-flag alien movement speed set to <strong>1.30×</strong> baseline.</li>
+          <li>Fire-Lancer attack range extended to <strong>900 px</strong> — covers the full alien zone.</li>
+        </ul>
+
+        <h4 style="color:#fbbf24;margin:8px 0 4px">📜 UPDATE HISTORY</h4>
+        <ul style="color:#d1fae5;font-size:11px;line-height:1.7;padding-left:18px;margin:0">
+          <li><strong style="color:#86efac">v1.0.1</strong> — Battlefield Balancing &amp; Gameplay Improvements (current)</li>
+          <li><strong style="color:#6b7280">v1.0.0</strong> — Initial release · Chrono-Front: Galactic War · Part 1 of 8</li>
+        </ul>
+      </div>
+
+      <!-- ── GAME INFO ─────────────────────────────────────────────────────── -->
+      <div class="extras-panel" id="extab-gameinfo" style="overflow-y:auto;max-height:340px;display:none">
+        <h3 style="color:#86efac;margin:0 0 8px">🎮 GAME INFORMATION</h3>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;color:#d1fae5">
+          <tr><td style="color:#6b7280;padding:3px 0;width:38%">Official Title</td><td><strong style="color:#c4b5fd">GALACTIC WARFARE: DEFENSE FOR PLANET EARTH</strong></td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Version</td><td>v1.0.1</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Category</td><td>Lane-based Tower Defense / Strategy</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Engine</td><td>Phaser 3 (MIT License)</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Campaign</td><td>50 levels across 5 environments</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Card System</td><td>52-card military deck (2 starting + 49 adventure + 1 boss)</td></tr>
+        </table>
+        <h4 style="color:#fbbf24;margin:14px 0 6px">About the Game</h4>
+        <p style="color:#d1fae5;font-size:12px;line-height:1.65;margin:0">
+          GALACTIC WARFARE: DEFENSE FOR PLANET EARTH is a lane-based battlefield defense game.
+          Players deploy military units across five lanes, collect plasma energy to fund deployments,
+          defend the home base against waves of alien invaders, and manage battlefield resources
+          under pressure. Progress through 50 Adventure levels, unlock new units, and repel the
+          full alien invasion.
+        </p>
+      </div>
+
+      <!-- ── DATABASE ──────────────────────────────────────────────────────── -->
+      <div class="extras-panel" id="extab-database" style="overflow-y:auto;max-height:340px;display:none">
+        <h3 style="color:#86efac;margin:0 0 8px">🗄 PLAYER DATA &amp; DATABASE</h3>
+        <p style="color:#d1fae5;font-size:12px;line-height:1.65;margin:0 0 10px">
+          Player account and progress information is stored through
+          <strong style="color:#c4b5fd">Google Sheets</strong> via a deployed Google Apps Script web-app.
+          Registration creates a row in the <em>GalacticWarfare</em> sheet; login validates credentials
+          against the stored salted hash. No plaintext passwords are ever stored.
+        </p>
+        <table style="width:100%;font-size:12px;border-collapse:collapse;color:#d1fae5">
+          <tr><td style="color:#6b7280;padding:3px 0;width:38%">Storage</td><td>Google Sheets (GalacticWarfare tab)</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Auth</td><td>Custom HMAC-SHA256 session tokens (Express / Node.js)</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Password security</td><td>Salted SHA-256 hash — plaintext never stored</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Saved fields</td><td>Email · Commander Name · Modes Unlock · Level · Coins</td></tr>
+          <tr><td style="color:#6b7280;padding:3px 0">Local fallback</td><td>localStorage (progression persists if server unreachable)</td></tr>
+        </table>
+      </div>
+
+      <!-- ── CREDITS ───────────────────────────────────────────────────────── -->
+      <div class="extras-panel" id="extab-credits" style="overflow-y:auto;max-height:340px;display:none">
+        <h3 style="color:#86efac;margin:0 0 8px">🏅 CREDITS</h3>
+        <div class="credits-body" style="font-size:12px;color:#d1fae5;line-height:1.7">
+          <p><strong style="color:#fbbf24">Game Design &amp; Development</strong><br/>Galactic Warfare: Defense for Planet Earth Team</p>
+          <p><strong style="color:#fbbf24">Engine</strong><br/>Phaser 3 (MIT License)</p>
+          <p><strong style="color:#fbbf24">Server</strong><br/>Express.js / Node.js</p>
+          <p><strong style="color:#fbbf24">Database</strong><br/>Google Sheets via Google Apps Script</p>
+          <p><strong style="color:#4ade80">All game content is 100% original.</strong><br/>No copyrighted assets from any commercial game were used.</p>
+          <p style="color:#6b7280;font-size:11px">Part 1 of 8 · v1.0.1</p>
+        </div>
+      </div>
+
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnCreditsClose" aria-label="Close credits" style="margin-top:14px">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+  /* Credits tab switcher — inline, no framework needed */
+  (function () {
+    document.addEventListener('DOMContentLoaded', function () {
+      var btns   = document.querySelectorAll('.extras-tab-btn');
+      var panels = document.querySelectorAll('.extras-panel');
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var target = btn.dataset.extab;
+          btns.forEach(function (b) { b.classList.remove('extras-tab--active'); });
+          btn.classList.add('extras-tab--active');
+          panels.forEach(function (p) {
+            p.style.display = p.id === 'extab-' + target ? '' : 'none';
+          });
+        });
+      });
+    });
+  })();
+  </script>
+
+  <!-- Settings -->
+  <div class="overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-labelledby="stTitle" hidden>
+    <div class="overlay-box">
+      <h2 class="overlay-title" id="stTitle">⚙ SETTINGS</h2>
+      <div class="settings-list">
+        <div class="setting-row">
+          <label class="setting-label" for="sfxVol">Sound Effects</label>
+          <input class="setting-slider" type="range" id="sfxVol" min="0" max="100" value="80" aria-label="SFX volume" />
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="musicVol">Music</label>
+          <input class="setting-slider" type="range" id="musicVol" min="0" max="100" value="60" aria-label="Music volume" />
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="showTips">Show Tips</label>
+          <input class="setting-checkbox" type="checkbox" id="showTips" checked aria-label="Show gameplay tips" />
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="pixelArt">Pixel Art Mode</label>
+          <input class="setting-checkbox" type="checkbox" id="pixelArt" checked aria-label="Pixel art rendering mode" />
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="graphicsResolution">Resolution</label>
+          <select class="setting-select graphics-setting" id="graphicsResolution" aria-label="Resolution scale">
+            <option value="low">Low</option><option value="standard">Standard</option><option value="high">High</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="graphicsQuality">Graphics Quality</label>
+          <select class="setting-select graphics-setting" id="graphicsQuality" aria-label="Graphics quality">
+            <option value="performance">Performance</option><option value="balanced">Balanced</option><option value="high">High</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="textureQuality">Texture Quality</label>
+          <select class="setting-select graphics-setting" id="textureQuality" aria-label="Texture quality">
+            <option value="crisp">Crisp pixels</option><option value="smooth">Smooth</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label class="setting-label" for="modelQuality">Model / Animation</label>
+          <select class="setting-select graphics-setting" id="modelQuality" aria-label="Model and animation quality">
+            <option value="low">Low</option><option value="balanced">Balanced</option><option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnSettingsClose" aria-label="Save and close settings">
+        <span class="btn-label">SAVE &amp; CLOSE</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Credits -->
+  <div class="overlay" id="extrasOverlay" role="dialog" aria-modal="true" aria-labelledby="extrasTitle" hidden>
+    <div class="overlay-box overlay-box--wide">
+      <h2 class="overlay-title" id="extrasTitle">📡 FIELD DATABASE</h2>
+      <p class="overlay-subtitle">Only military cards you have unlocked and alien variants that have appeared are listed here.</p>
+      <div class="extras-summary" style="display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 14px;color:#d1fae5">
+        <div class="extras-count"><strong id="extrasMilitaryCount">0 / 0</strong><span>Military cards unlocked</span></div>
+        <div class="extras-count"><strong id="extrasAlienCount">0 / 0</strong><span>Alien variants encountered</span></div>
+      </div>
+      <div id="extrasCatalogContent" style="overflow-y:auto;max-height:350px">
+        <h3 style="color:#86efac;margin:12px 0 4px">🪖 MILITARY CARDS</h3>
+        <div class="chars-grid" id="extrasMilitaryGrid" aria-live="polite"></div>
+        <h3 style="color:#c4b5fd;margin:12px 0 4px">👽 ALIEN VARIANTS</h3>
+        <div class="chars-grid" id="extrasAliensGrid" aria-live="polite"></div>
+      </div>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnExtrasClose" aria-label="Close Extras">
+        <span class="btn-label">CLOSE</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quit confirm -->
+  <div class="overlay" id="quitOverlay" role="dialog" aria-modal="true" aria-labelledby="quitTitle" hidden>
+    <div class="overlay-box">
+      <h2 class="overlay-title" id="quitTitle">QUIT?</h2>
+      <p class="overlay-body">Progress is saved automatically. Are you sure you want to quit?</p>
+      <div class="menu-btn-row" style="margin-top:8px">
+        <button class="menu-btn menu-btn--primary" id="btnQuitConfirm" aria-label="Confirm quit">
+          <span class="btn-label">YES, QUIT</span>
+        </button>
+        <button class="menu-btn menu-btn--secondary" id="btnQuitCancel" aria-label="Cancel">
+          <span class="btn-label">NO, STAY</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notify overlay -->
+  <div class="overlay" id="notifyOverlay" role="dialog" aria-modal="true" aria-labelledby="notifyTitle" hidden>
+    <div class="overlay-box">
+      <h2 class="overlay-title" id="notifyTitle">Stay Tuned</h2>
+      <p class="overlay-body"><strong>Chrono-Front: Heroes of Earth</strong> is in development.<br/>Follow our updates for launch news.</p>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnNotifyClose" aria-label="Close">
+        <span class="btn-label">GOT IT</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Coming Soon generic -->
+  <div class="overlay" id="comingSoonOverlay" role="dialog" aria-modal="true" aria-labelledby="csGTitle" hidden>
+    <div class="overlay-box">
+      <h2 class="overlay-title" id="csGTitle">Coming Soon</h2>
+      <p class="overlay-body">This content is under development and will be available in a future update.</p>
+      <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnCSClose" aria-label="Close">
+        <span class="btn-label">BACK</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="public/js/audio.js"></script>
+  <script>window.GWAudio.setScene('loading');</script>
+  <script src="public/js/config.js"></script>
+  <script src="public/js/game/progression.js"></script>
+  <script src="public/js/game/sheets-client.js"></script>
+  <script>window.GW.sheetsClient.init().catch(function () {});</script>
+  <script src="public/js/graphics.js"></script>
+  <script src="public/js/game/cards.js"></script>
+  <script src="public/js/menu.js"></script>
+  <script>
+  // ── Intro Loading Screen Controller ──────────────────────────────────────
+  // Runs after scripts load. Animates the intro screen then calls _initMenu().
+  (function () {
+    var barFill = document.getElementById("introBarFill");
+    var status  = document.getElementById("introStatus");
+    var screen  = document.getElementById("intro-screen");
+    if (!screen) return;
+
+    var stages = [
+      { pct: 8,   msg: "Establishing uplink\u2026",         d: 350 },
+      { pct: 22,  msg: "Loading tactical assets\u2026",     d: 450 },
+      { pct: 38,  msg: "Scanning alien signatures\u2026",   d: 500 },
+      { pct: 55,  msg: "Briefing command officers\u2026",   d: 480 },
+      { pct: 72,  msg: "Deploying defense grid\u2026",      d: 500 },
+      { pct: 88,  msg: "Checking progression data\u2026",   d: 420 },
+      { pct: 100, msg: "Systems ready. Stand by\u2026",     d: 520 },
+    ];
+
+    var i = 0;
+    var tick = function () {
+      if (i >= stages.length) {
+        screen.classList.add("fade-out");
+        setTimeout(function () {
+          screen.classList.add("gone");
+          if (window.GWAudio) window.GWAudio.setScene('menu');
+          if (typeof window._initMenu === "function") window._initMenu();
+        }, 700);
+        return;
+      }
+      var st = stages[i++];
+      if (barFill) barFill.style.width = st.pct + "%";
+      if (status)  status.textContent  = st.msg;
+      setTimeout(tick, st.d);
+    };
+    setTimeout(tick, 300);
+  })();
+  </script>
+
+  <!-- ── Auth utilities available to menu.js ───────────────────────────────
+       window.gwGetUser()   → { uid, email, username } or null
+       window.gwLogout()    → clears session, redirects to auth.html
+  ──────────────────────────────────────────────────────────────────────── -->
+  <script>
+  window.gwGetUser = function () {
+    try { return JSON.parse(localStorage.getItem('gw_user') || 'null'); } catch (_) { return null; }
+  };
+  window.gwLogout = async function () {
+    var token = localStorage.getItem('gw_session_token') || localStorage.getItem('gw_id_token');
+    var isGuest = sessionStorage.getItem('gw_mode') === 'guest';
+    if (window.GW && window.GW.progression && !window.GW.progression.isGuest) {
+      window.GW.progression.save();
+      var client = window.GW.sheetsClient;
+      if (client) {
+        try {
+          await client.init();
+          var user = window.gwGetUser() || {};
+          if (user.email) await client.saveProgression(user.email, window.GW.progression.state);
+        } catch (error) { console.warn('[Auth] Progress could not be synced before sign-out.', error); }
+      }
+    }
+    if (window.GWNet) { try { await window.GWNet.logout(token); } catch (_) {} }
+    // Clear all session keys — must match the keys set in public/js/auth.js persistSession()
+    localStorage.removeItem('gw_session_token');
+    localStorage.removeItem('gw_id_token');
+    localStorage.removeItem('gw_user');
+    localStorage.removeItem('gw_last_login_at');
+    sessionStorage.removeItem('gw_entry_authorized');
+    sessionStorage.removeItem('gw_mode');
+    sessionStorage.removeItem('gw_guess_mode');
+    if (isGuest) localStorage.removeItem('gwr_guest_progression_v1');
+    window.location.replace('auth.html');
+  };
+  </script>
+</body>
+</html>

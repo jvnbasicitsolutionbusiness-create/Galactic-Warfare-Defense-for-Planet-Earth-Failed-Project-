@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy | Galactic Warfare</title>
+  <link rel="stylesheet" href="public/css/auth.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-panel" aria-labelledby="privacyTitle">
+      <h1 class="auth-form-title" id="privacyTitle">PRIVACY AND GAME DATA</h1>
+      <p><strong>Registered accounts:</strong> the game processes your email address, commander name, password verifier, progression, game settings, and sign-in/device security records. Passwords are sent over the configured HTTPS service and the Apps Script stores a salted SHA-256 verifier, not the submitted password.</p>
+      <p>Registered progression and settings are stored in the Google Sheets spreadsheet configured by the game operator and loaded for that account when you sign in. The browser also keeps a separate local cache for each account. Clearing browser data removes the saved login and local cache, but does not delete the Google Sheets save; sign in again to restore your account progress. A valid session is bound to a random first-party device identifier used for session checks and login-attempt tracking.</p>
+      <p>Five failed sign-in attempts for a device/account combination trigger a five-minute lockout. A hashed network/account key also helps preserve the temporary lockout if browser site data is cleared. The identifier is not a hardware fingerprint and cannot reliably recognize a device after its site data is cleared, on another browser, or on another network.</p>
+      <p><strong>Guest demo:</strong> no account profile, gameplay progress, or settings are saved. Guest state exists only for the active browser session and is discarded when that session ends.</p>
+      <p>Transport, server, browser-storage, and Google Sheets protections reduce risk but cannot guarantee that data is “safe and sound” in every circumstance. Do not reuse passwords or enter sensitive information beyond the account fields requested. Sign out when using a shared device.</p>
+      <p><a href="auth.html">Return to authentication</a></p>
+    </section>
+  </main>
+</body>
+</html>

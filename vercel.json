@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "name": "galactic-warfare-defense-for-planet-earth",
+  "builds": [
+    {
+      "src": "server/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/server.js"
+    },
+    {
+      "src": "/(.*\\.(css|js|svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|ogg|mp3|wav))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/auth.html",
+      "dest": "server/server.js"
+    },
+    {
+      "src": "/game.html",
+      "dest": "server/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

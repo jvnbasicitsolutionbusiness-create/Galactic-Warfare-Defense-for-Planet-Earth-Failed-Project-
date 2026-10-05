@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#04060f" />
+  <meta name="description" content="Galactic Warfare: Defense for Planet Earth — Login or create your Commander account." />
+  <title>Galactic Warfare: Defense for Planet Earth — Login</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="public/css/auth.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="auth-loader" id="authLoader" role="status" aria-live="polite">
+    <span class="auth-loader-mark" aria-hidden="true">✦</span>
+    <p class="auth-loader-title">GALACTIC WARFARE</p>
+    <p class="auth-loader-status" id="authLoaderStatus">Establishing secure uplink...</p>
+    <div class="auth-loader-track"><span id="authLoaderFill"></span></div>
+    <button class="loading-audio-toggle" type="button" data-audio-toggle aria-pressed="false">ENABLE SOUND</button>
+  </div>
+
+  <!-- ── Animated background ─────────────────────────────── -->
+  <div class="auth-bg" aria-hidden="true">
+    <div class="auth-bg-orb auth-bg-orb--teal"></div>
+    <div class="auth-bg-orb auth-bg-orb--purple"></div>
+    <div class="auth-bg-orb auth-bg-orb--red"></div>
+  </div>
+  <div class="auth-scanlines" aria-hidden="true"></div>
+  <div class="auth-ground" aria-hidden="true">
+    <div class="auth-ground-line"></div>
+  </div>
+
+  <!-- ── Page wrapper ────────────────────────────────────── -->
+  <main class="auth-page" role="main">
+
+    <!-- Game title -->
+    <div class="auth-game-title" aria-label="Galactic Warfare: Defense for Planet Earth">
+      <span class="title-top">GALACTIC WARFARE</span>
+      <span class="title-divider" aria-hidden="true">✦</span>
+      <span class="title-bottom">DEFENSE FOR PLANET EARTH</span>
+    </div>
+
+    <!-- Auth panel -->
+    <div class="auth-panel" role="region" aria-label="Login or Register">
+
+      <!-- Threat badge (decorative) -->
+      <div class="auth-threat" aria-hidden="true">
+        <span class="auth-threat-dot"></span>
+        <span>COMMANDER AUTHENTICATION REQUIRED</span>
+        <span class="auth-threat-dot"></span>
+      </div>
+
+      <!-- Tab switcher -->
+      <div class="auth-tabs" role="tablist" aria-label="Login or Register">
+        <button
+          class="auth-tab active"
+          id="tabLogin"
+          role="tab"
+          aria-selected="true"
+          aria-controls="sectionLogin"
+        >⚔ LOGIN</button>
+        <button
+          class="auth-tab"
+          id="tabRegister"
+          role="tab"
+          aria-selected="false"
+          aria-controls="sectionRegister"
+        >🪖 REGISTER</button>
+      </div>
+
+      <!-- ── LOGIN SECTION ───────────────────────────────── -->
+      <section
+        class="auth-form-section active"
+        id="sectionLogin"
+        role="tabpanel"
+        aria-labelledby="tabLogin"
+      >
+        <h1 class="auth-form-title">WELCOME BACK, COMMANDER</h1>
+
+        <form id="formLogin" novalidate autocomplete="on">
+
+          <div class="auth-field">
+            <label class="auth-label" for="loginEmail">EMAIL ADDRESS</label>
+            <input
+              class="auth-input"
+              type="email"
+              id="loginEmail"
+              name="email"
+              autocomplete="email"
+              placeholder="commander@earth.mil"
+              required
+              maxlength="254"
+              aria-describedby="loginEmailErr"
+            />
+            <span class="auth-field-error" id="loginEmailErr" role="alert"></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="loginPassword">PASSWORD</label>
+            <div class="auth-password-control">
+              <input
+                class="auth-input"
+                type="password"
+                id="loginPassword"
+                name="password"
+                autocomplete="current-password"
+                placeholder="••••••••"
+                required
+                maxlength="128"
+                aria-describedby="loginPwErr"
+              />
+              <button class="auth-password-toggle" type="button" data-password-toggle aria-controls="loginPassword" aria-pressed="false">SHOW</button>
+            </div>
+            <span class="auth-field-error" id="loginPwErr" role="alert"></span>
+          </div>
+
+          <button class="auth-submit" type="submit" id="loginBtn">
+            DEPLOY TO BASE
+          </button>
+
+          <div class="auth-status" id="loginStatus" role="alert" aria-live="polite"></div>
+
+        </form>
+
+        <div class="auth-divider">OR</div>
+
+        <p class="auth-footer">
+          No account yet?
+          <a href="#" id="linkToRegister">Create one here.</a>
+        </p>
+      </section>
+
+      <!-- ── REGISTER SECTION ────────────────────────────── -->
+      <section
+        class="auth-form-section"
+        id="sectionRegister"
+        role="tabpanel"
+        aria-labelledby="tabRegister"
+        hidden
+      >
+        <h1 class="auth-form-title">REGISTER AS COMMANDER</h1>
+
+        <form id="formRegister" novalidate autocomplete="off">
+
+          <div class="auth-field">
+            <label class="auth-label" for="regUsername">COMMANDER NAME</label>
+            <input
+              class="auth-input"
+              type="text"
+              id="regUsername"
+              name="username"
+              autocomplete="username"
+              placeholder="e.g. AlphaStrike_7"
+              required
+              minlength="3"
+              maxlength="24"
+              aria-describedby="regUsernameErr"
+            />
+            <span class="auth-field-error" id="regUsernameErr" role="alert"></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="regEmail">EMAIL ADDRESS</label>
+            <input
+              class="auth-input"
+              type="email"
+              id="regEmail"
+              name="email"
+              autocomplete="email"
+              placeholder="commander@earth.mil"
+              required
+              maxlength="254"
+              aria-describedby="regEmailErr"
+            />
+            <span class="auth-field-error" id="regEmailErr" role="alert"></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="regPassword">PASSWORD</label>
+            <div class="auth-password-control">
+              <input
+                class="auth-input"
+                type="password"
+                id="regPassword"
+                name="new-password"
+                autocomplete="new-password"
+                placeholder="Minimum 12 characters"
+                required
+                minlength="12"
+                maxlength="128"
+                aria-describedby="regPwErr"
+              />
+              <button class="auth-password-toggle" type="button" data-password-toggle aria-controls="regPassword" aria-pressed="false">SHOW</button>
+            </div>
+            <!-- Password strength bar -->
+            <div class="auth-strength" aria-hidden="true">
+              <div class="auth-strength-bar" id="regStrengthBar"></div>
+            </div>
+            <span class="auth-field-error" id="regPwErr" role="alert"></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="regConfirm">CONFIRM PASSWORD</label>
+            <div class="auth-password-control">
+              <input
+                class="auth-input"
+                type="password"
+                id="regConfirm"
+                name="confirm-password"
+                autocomplete="new-password"
+                placeholder="Repeat password"
+                required
+                maxlength="128"
+                aria-describedby="regConfirmErr"
+              />
+              <button class="auth-password-toggle" type="button" data-password-toggle aria-controls="regConfirm" aria-pressed="false">SHOW</button>
+            </div>
+            <span class="auth-field-error" id="regConfirmErr" role="alert"></span>
+          </div>
+
+          <button class="auth-submit" type="submit" id="regBtn">
+            CREATE ACCOUNT
+          </button>
+
+          <div class="auth-status" id="regStatus" role="alert" aria-live="polite"></div>
+
+        </form>
+
+        <div class="auth-divider">OR</div>
+
+        <p class="auth-footer">
+          Already enlisted?
+          <a href="#" id="linkToLogin">Log in here.</a>
+        </p>
+      </section>
+
+    </div><!-- /.auth-panel -->
+
+    <div class="auth-entry-actions">
+      <button class="auth-submit auth-continue" id="continueSessionBtn" type="button" hidden>CONTINUE SAVED COMMANDER</button>
+      <p class="auth-entry-note" id="continueSessionNote" hidden>This saved login is on this device only. Use your registered email and password on another device.</p>
+      <button class="auth-submit auth-guest" id="guestModeBtn" type="button">PLAY AS GUEST · UNSAVED DEMO</button>
+      <p class="auth-entry-note">Registered sign-in saves your account progress and settings. Guest demo data is not saved.</p>
+    </div>
+
+    <p class="auth-terms-footer">
+      By playing, you agree to our
+      <a href="terms.html" target="_blank" rel="noopener">Terms</a> &amp;
+      <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+    </p>
+
+  </main><!-- /.auth-page -->
+
+  <!-- Cross-tab link shortcuts — handled before auth.js loads -->
+  <script>
+    document.getElementById('linkToRegister')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('tabRegister')?.click();
+    });
+    document.getElementById('linkToLogin')?.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('tabLogin')?.click();
+    });
+    // Remove hidden attr on register panel when tab is active
+    // (auth.js toggles .active class; hidden attr is for initial load a11y)
+    document.getElementById('tabRegister')?.addEventListener('click', function() {
+      document.getElementById('sectionRegister')?.removeAttribute('hidden');
+      document.getElementById('sectionLogin')?.setAttribute('hidden', '');
+    });
+    document.getElementById('tabLogin')?.addEventListener('click', function() {
+      document.getElementById('sectionLogin')?.removeAttribute('hidden');
+      document.getElementById('sectionRegister')?.setAttribute('hidden', '');
+    });
+  </script>
+
+  <!-- Adaptive network runtime (backend / Apps Script auto-detect) -->
+  <script src="public/js/audio.js"></script>
+  <script>window.GWAudio.setScene('loading');</script>
+  <script src="public/js/runtime.js"></script>
+  <!-- Main auth logic -->
+  <script src="public/js/auth.js"></script>
+  <script>
+    (function () {
+      var loader = document.getElementById('authLoader');
+      var fill = document.getElementById('authLoaderFill');
+      var status = document.getElementById('authLoaderStatus');
+      var progress = 0;
+      var timer = window.setInterval(function () {
+        progress = Math.min(100, progress + 10);
+        if (fill) fill.style.width = progress + '%';
+        if (status && progress >= 60) status.textContent = 'Preparing commander access...';
+        if (progress >= 100) {
+          window.clearInterval(timer);
+          window.GWAudio.setScene('auth');
+          loader.classList.add('auth-loader--done');
+          window.setTimeout(function () { loader.remove(); }, 550);
+        }
+      }, 90);
+    })();
+  </script>
+
+</body>
+</html>

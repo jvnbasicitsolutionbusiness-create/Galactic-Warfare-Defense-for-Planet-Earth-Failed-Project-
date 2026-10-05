@@ -1,0 +1,233 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 380" width="540" height="380">
+  <!-- Flag-Holding Pink Alien (ALN-015 / Horde Leader) Sprite Sheet Reference -->
+  <!-- Palette: Body #e879f9 hot pink | Accent #c026d3 deep magenta | Dark #7e22ce purple-dark -->
+  <!-- Flag pole #d97706 amber | Flag #ef4444 red | Flag emblem #fff | Eye glow #a855f7 violet -->
+  <defs><style>.lbl{font:bold 8px monospace;fill:#94a3b8}</style></defs>
+  <rect width="540" height="380" fill="#0f172a"/>
+  <rect width="540" height="20" fill="#1e293b"/>
+  <text x="6" y="14" style="font:bold 10px monospace;fill:#e879f9">FLAG-HOLDING PINK ALIEN (ALN-015)</text>
+  <text x="340" y="14" style="font:bold 8px monospace;fill:#94a3b8">HORDE LEADER</text>
+
+  <!-- Row labels -->
+  <text x="4" y="42"  class="lbl">IDLE (6)</text>
+  <text x="4" y="112" class="lbl">WALK (6)</text>
+  <text x="4" y="182" class="lbl">ATTACK (8)</text>
+  <text x="4" y="252" class="lbl">THROW (FLAG WAVE) (8)</text>
+  <text x="4" y="312" class="lbl">TAKE DAMAGE (4)</text>
+  <text x="4" y="362" class="lbl">DEATH (6)</text>
+
+  <!-- IDLE row: canonical frame showing full pink alien with flag -->
+  <g transform="translate(60,24)">
+    <rect x="0" y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <!-- Ground shadow -->
+    <ellipse cx="26" cy="76" rx="18" ry="5" fill="#000" opacity="0.25"/>
+    <!-- Legs -->
+    <line x1="18" y1="46" x2="8"  y2="64" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <line x1="34" y1="46" x2="44" y2="64" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <!-- Feet/claws -->
+    <ellipse cx="8"  cy="65" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="44" cy="65" rx="5" ry="3" fill="#c026d3"/>
+    <!-- Body (bulbous, slightly smaller than common alien) -->
+    <ellipse cx="26" cy="34" rx="13" ry="16" fill="#e879f9"/>
+    <!-- Body ridges -->
+    <line x1="20" y1="22" x2="18" y2="42" stroke="#c026d3" stroke-width="1.5" opacity="0.6"/>
+    <line x1="32" y1="22" x2="34" y2="42" stroke="#c026d3" stroke-width="1.5" opacity="0.6"/>
+    <!-- Left arm (holding flag pole at bottom) -->
+    <line x1="14" y1="30" x2="6" y2="42" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="6" cy="42" r="4" fill="#c026d3"/>
+    <!-- Right arm (holding pole top) -->
+    <line x1="38" y1="28" x2="42" y2="18" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="42" cy="18" r="4" fill="#c026d3"/>
+    <!-- Body glow / core -->
+    <circle cx="26" cy="34" r="6" fill="#a855f7" opacity="0.3"/>
+    <circle cx="26" cy="34" r="3" fill="#a855f7" opacity="0.8"/>
+    <!-- Neck -->
+    <ellipse cx="26" cy="18" rx="7" ry="5" fill="#e879f9"/>
+    <!-- Head -->
+    <rect x="12" y="-4" width="28" height="22" fill="#e879f9" rx="5"/>
+    <!-- Pointed ears -->
+    <polygon points="12,2 6,-8 16,-2" fill="#e879f9"/>
+    <polygon points="40,2 46,-8 36,-2" fill="#e879f9"/>
+    <!-- Cranial ridges -->
+    <polygon points="18,-4 15,-12 21,-12" fill="#c026d3" opacity="0.8"/>
+    <polygon points="24,-4 21,-12 27,-12" fill="#c026d3" opacity="0.8"/>
+    <polygon points="30,-4 27,-12 33,-12" fill="#c026d3" opacity="0.8"/>
+    <!-- Eyes (2 large, more menacing) -->
+    <ellipse cx="18" cy="5" rx="5" ry="6" fill="#a855f7"/>
+    <ellipse cx="34" cy="5" rx="5" ry="6" fill="#a855f7"/>
+    <!-- Eye pupils -->
+    <circle cx="18" cy="5" r="2.5" fill="#1a0030"/>
+    <circle cx="34" cy="5" r="2.5" fill="#1a0030"/>
+    <!-- Eye glow -->
+    <circle cx="18" cy="5" r="7" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+    <circle cx="34" cy="5" r="7" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+    <!-- Fanged mouth -->
+    <path d="M18,14 Q26,20 34,14" fill="none" stroke="#7e22ce" stroke-width="2"/>
+    <polygon points="20,14 21,18 22,14" fill="#fff" opacity="0.6"/>
+    <polygon points="25,15 26,19 27,15" fill="#fff" opacity="0.6"/>
+    <polygon points="30,14 31,18 32,14" fill="#fff" opacity="0.6"/>
+
+    <!-- FLAG POLE (to the right, held by alien) -->
+    <rect x="38" y="-38" width="3" height="58" fill="#d97706"/>
+    <!-- Pole tip ornament -->
+    <circle cx="39" cy="-40" r="3" fill="#fbbf24"/>
+    <!-- Alien skull emblem on flag top -->
+    <circle cx="39" cy="-40" r="2" fill="#7e22ce"/>
+    <!-- Flag (red, waving to the right) -->
+    <polygon points="41,-38 58,-30 41,-22" fill="#ef4444"/>
+    <!-- Flag emblem (skull/symbol) -->
+    <circle cx="50" cy="-30" r="3" fill="#fff" opacity="0.6"/>
+    <rect  x="49" y="-28" width="2" height="4" fill="#fff" opacity="0.5"/>
+  </g>
+
+  <!-- Walk frame (legs offset) -->
+  <g transform="translate(113,24)">
+    <rect x="0" y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <ellipse cx="26" cy="76" rx="18" ry="5" fill="#000" opacity="0.25"/>
+    <!-- Walk: alternate leg positions -->
+    <line x1="18" y1="46" x2="4"  y2="61" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <line x1="34" y1="46" x2="46" y2="59" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="4"  cy="62" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="46" cy="60" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="26" cy="34" rx="13" ry="16" fill="#e879f9"/>
+    <line x1="20" y1="22" x2="18" y2="42" stroke="#c026d3" stroke-width="1.5" opacity="0.6"/>
+    <line x1="32" y1="22" x2="34" y2="42" stroke="#c026d3" stroke-width="1.5" opacity="0.6"/>
+    <line x1="14" y1="30" x2="6" y2="42" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="6" cy="42" r="4" fill="#c026d3"/>
+    <line x1="38" y1="28" x2="42" y2="18" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="42" cy="18" r="4" fill="#c026d3"/>
+    <circle cx="26" cy="34" r="6" fill="#a855f7" opacity="0.3"/>
+    <circle cx="26" cy="34" r="3" fill="#a855f7" opacity="0.8"/>
+    <ellipse cx="26" cy="18" rx="7" ry="5" fill="#e879f9"/>
+    <rect x="12" y="-4" width="28" height="22" fill="#e879f9" rx="5"/>
+    <polygon points="12,2 6,-8 16,-2" fill="#e879f9"/>
+    <polygon points="40,2 46,-8 36,-2" fill="#e879f9"/>
+    <polygon points="18,-4 15,-12 21,-12" fill="#c026d3" opacity="0.8"/>
+    <polygon points="24,-4 21,-12 27,-12" fill="#c026d3" opacity="0.8"/>
+    <polygon points="30,-4 27,-12 33,-12" fill="#c026d3" opacity="0.8"/>
+    <ellipse cx="18" cy="5" rx="5" ry="6" fill="#a855f7"/>
+    <ellipse cx="34" cy="5" rx="5" ry="6" fill="#a855f7"/>
+    <circle cx="18" cy="5" r="2.5" fill="#1a0030"/>
+    <circle cx="34" cy="5" r="2.5" fill="#1a0030"/>
+    <path d="M18,14 Q26,20 34,14" fill="none" stroke="#7e22ce" stroke-width="2"/>
+    <!-- Flag waves with body motion -->
+    <rect x="38" y="-36" width="3" height="56" fill="#d97706"/>
+    <circle cx="39" cy="-38" r="3" fill="#fbbf24"/>
+    <circle cx="39" cy="-38" r="2" fill="#7e22ce"/>
+    <!-- Flag with slight wave -->
+    <polygon points="41,-36 60,-27 41,-19" fill="#ef4444"/>
+    <circle cx="52" cy="-28" r="3" fill="#fff" opacity="0.6"/>
+    <rect  x="51" y="-26" width="2" height="4" fill="#fff" opacity="0.5"/>
+  </g>
+
+  <!-- Abbreviated frames -->
+  <g transform="translate(168,24)">
+    <rect x="0"   y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <text x="26" y="43" class="lbl" text-anchor="middle" fill="#334155">2</text>
+    <rect x="55"  y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <text x="81" y="43" class="lbl" text-anchor="middle" fill="#334155">3</text>
+    <rect x="110" y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <text x="136" y="43" class="lbl" text-anchor="middle" fill="#334155">4</text>
+    <rect x="165" y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <text x="191" y="43" class="lbl" text-anchor="middle" fill="#334155">5</text>
+  </g>
+
+  <!-- ATTACK row key frame -->
+  <g transform="translate(60,164)">
+    <rect x="0" y="0" width="52" height="80" fill="#0f172a" rx="2"/>
+    <ellipse cx="26" cy="76" rx="18" ry="5" fill="#000" opacity="0.25"/>
+    <line x1="18" y1="46" x2="10" y2="62" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <line x1="34" y1="46" x2="42" y2="62" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="10" cy="63" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="42" cy="63" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="26" cy="34" rx="13" ry="16" fill="#e879f9"/>
+    <line x1="20" y1="22" x2="18" y2="42" stroke="#c026d3" stroke-width="1.5" opacity="0.6"/>
+    <line x1="32" y1="22" x2="34" y2="42" stroke="#c026d3" stroke-width="1.5" opacity="0.6"/>
+    <!-- Attack: left claw slashing forward -->
+    <line x1="14" y1="30" x2="-8" y2="26" stroke="#e879f9" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="-8" cy="26" r="5" fill="#c026d3"/>
+    <!-- Slash marks -->
+    <line x1="-10" y1="20" x2="-4" y2="32" stroke="#e879f9" stroke-width="1.5" opacity="0.7"/>
+    <line x1="-6"  y1="18" x2="0"  y2="30" stroke="#e879f9" stroke-width="1.5" opacity="0.5"/>
+    <!-- Right arm still holds flag -->
+    <line x1="38" y1="28" x2="42" y2="18" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="42" cy="18" r="4" fill="#c026d3"/>
+    <circle cx="26" cy="34" r="6" fill="#a855f7" opacity="0.5"/>
+    <circle cx="26" cy="34" r="3" fill="#a855f7"/>
+    <ellipse cx="26" cy="18" rx="7" ry="5" fill="#e879f9"/>
+    <rect x="12" y="-4" width="28" height="22" fill="#e879f9" rx="5"/>
+    <polygon points="12,2 6,-8 16,-2" fill="#e879f9"/>
+    <polygon points="40,2 46,-8 36,-2" fill="#e879f9"/>
+    <polygon points="18,-4 15,-12 21,-12" fill="#c026d3" opacity="0.8"/>
+    <polygon points="24,-4 21,-12 27,-12" fill="#c026d3" opacity="0.8"/>
+    <polygon points="30,-4 27,-12 33,-12" fill="#c026d3" opacity="0.8"/>
+    <ellipse cx="18" cy="5" rx="5" ry="6" fill="#a855f7"/>
+    <ellipse cx="34" cy="5" rx="5" ry="6" fill="#a855f7"/>
+    <circle cx="18" cy="5" r="2.5" fill="#1a0030"/>
+    <circle cx="34" cy="5" r="2.5" fill="#1a0030"/>
+    <circle cx="18" cy="5" r="9" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="34" cy="5" r="9" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.5"/>
+    <path d="M18,14 Q26,20 34,14" fill="none" stroke="#7e22ce" stroke-width="2"/>
+    <!-- Flag -->
+    <rect x="38" y="-38" width="3" height="58" fill="#d97706"/>
+    <circle cx="39" cy="-40" r="3" fill="#fbbf24"/>
+    <polygon points="41,-38 58,-30 41,-22" fill="#ef4444"/>
+    <circle cx="50" cy="-30" r="3" fill="#fff" opacity="0.6"/>
+  </g>
+
+  <!-- FLAG WAVE (special ability) key frame -->
+  <g transform="translate(60,234)">
+    <rect x="0" y="0" width="52" height="70" fill="#0f172a" rx="2"/>
+    <!-- Body same -->
+    <ellipse cx="26" cy="64" rx="18" ry="5" fill="#000" opacity="0.25"/>
+    <line x1="18" y1="44" x2="10" y2="58" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <line x1="34" y1="44" x2="42" y2="58" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="10" cy="59" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="42" cy="59" rx="5" ry="3" fill="#c026d3"/>
+    <ellipse cx="26" cy="32" rx="13" ry="16" fill="#e879f9"/>
+    <!-- Both arms raised to swing flag -->
+    <line x1="14" y1="28" x2="6" y2="18" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="6" cy="18" r="4" fill="#c026d3"/>
+    <line x1="38" y1="26" x2="44" y2="14" stroke="#e879f9" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="44" cy="14" r="4" fill="#c026d3"/>
+    <!-- Flag waved overhead (horizontal sweep) -->
+    <rect x="30" y="-28" width="3" height="44" fill="#d97706" transform="rotate(-30, 31, 16)"/>
+    <!-- Big swooshing flag -->
+    <polygon points="34,4 68,-2 44,22" fill="#ef4444" opacity="0.9"/>
+    <circle cx="55" cy="8" r="4" fill="#fff" opacity="0.5"/>
+    <!-- Flag wave glow trail -->
+    <ellipse cx="52" cy="10" rx="22" ry="12" fill="#ef4444" opacity="0.15"/>
+    <!-- Body glow -->
+    <circle cx="26" cy="32" r="7" fill="#a855f7" opacity="0.4"/>
+    <circle cx="26" cy="32" r="3" fill="#a855f7"/>
+    <ellipse cx="26" cy="16" rx="7" ry="5" fill="#e879f9"/>
+    <rect x="12" y="-2" width="28" height="22" fill="#e879f9" rx="5"/>
+    <polygon points="12,4 6,-6 16,0" fill="#e879f9"/>
+    <polygon points="40,4 46,-6 36,0" fill="#e879f9"/>
+    <polygon points="18,-2 15,-10 21,-10" fill="#c026d3" opacity="0.8"/>
+    <polygon points="24,-2 21,-10 27,-10" fill="#c026d3" opacity="0.8"/>
+    <polygon points="30,-2 27,-10 33,-10" fill="#c026d3" opacity="0.8"/>
+    <ellipse cx="18" cy="7" rx="5" ry="6" fill="#a855f7"/>
+    <ellipse cx="34" cy="7" rx="5" ry="6" fill="#a855f7"/>
+    <circle cx="18" cy="7" r="2.5" fill="#1a0030"/>
+    <circle cx="34" cy="7" r="2.5" fill="#1a0030"/>
+    <!-- Eyes extra bright during special -->
+    <circle cx="18" cy="7" r="9" fill="none" stroke="#e879f9" stroke-width="2" opacity="0.7"/>
+    <circle cx="34" cy="7" r="9" fill="none" stroke="#e879f9" stroke-width="2" opacity="0.7"/>
+    <path d="M18,16 Q26,22 34,16" fill="none" stroke="#7e22ce" stroke-width="2"/>
+  </g>
+
+  <!-- DEATH row: fallen prone with flag beside -->
+  <g transform="translate(60,344)">
+    <rect x="0" y="0" width="52" height="48" fill="#0f172a" rx="2"/>
+    <ellipse cx="30" cy="44" rx="22" ry="5" fill="#000" opacity="0.3"/>
+    <!-- Prone body -->
+    <ellipse cx="30" cy="34" rx="20" ry="9" fill="#e879f9" opacity="0.7"/>
+    <!-- Head fallen -->
+    <ellipse cx="10" cy="28" rx="10" ry="8" fill="#e879f9" opacity="0.7"/>
+    <ellipse cx="10" cy="26" rx="3" ry="4" fill="#a855f7" opacity="0.4"/>
+    <!-- Flag lying flat -->
+    <rect x="20" y="38" width="36" height="2.5" fill="#d97706" opacity="0.6"/>
+    <polygon points="56,34 72,37 56,40" fill="#ef4444" opacity="0.5"/>
+  </g>
+</svg>

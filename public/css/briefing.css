@@ -1,0 +1,355 @@
+/* ============================================================
+   Garden Warfare: Reborn — Briefing Overlay Styles
+   Used by GW.BriefingSystem (briefing.js)
+   ============================================================ */
+
+/* ── Base overlay ────────────────────────────────────────── */
+.gw-briefing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.92);
+  animation: briefingFadeIn 0.3s ease forwards;
+  font-family: 'Exo 2', 'Courier New', monospace;
+}
+
+.gw-briefing-overlay.fade-out-fast {
+  animation: briefingFadeOut 0.3s ease forwards;
+}
+
+@keyframes briefingFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes briefingFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ── Creator Bitos briefing ──────────────────────────────── */
+.bitos-briefing {
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(212, 168, 67, 0.08) 0%, transparent 60%),
+    rgba(0, 0, 0, 0.94);
+  border: 1px solid rgba(212, 168, 67, 0.25);
+}
+
+.bitos-portrait {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.bitos-pixel-head {
+  width: 64px;
+  height: 64px;
+  background:
+    /* pixel art face placeholder */
+    linear-gradient(180deg, #d4a843 0%, #d4a843 30%, #c8956a 30%, #c8956a 70%, #d4a843 70%, #d4a843 100%);
+  border: 2px solid rgba(212, 168, 67, 0.6);
+  border-radius: 4px;
+  box-shadow: 0 0 18px rgba(212, 168, 67, 0.4);
+  image-rendering: pixelated;
+  margin-bottom: 8px;
+}
+
+.bitos-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #d4a843;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 10px rgba(212, 168, 67, 0.6);
+  text-transform: uppercase;
+}
+
+.bitos-title {
+  font-size: 0.7rem;
+  color: #fbbf24;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+.bitos-dialogue {
+  max-width: 560px;
+  width: 100%;
+  min-height: 80px;
+  font-size: 1.1rem;
+  color: #fef3c7;
+  line-height: 1.7;
+  text-align: center;
+  padding: 20px;
+  background: rgba(212, 168, 67, 0.05);
+  border: 1px solid rgba(212, 168, 67, 0.15);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Digital Briefing Terminal ───────────────────────────── */
+.digital-briefing {
+  background:
+    radial-gradient(ellipse at center, rgba(0, 255, 65, 0.04) 0%, transparent 70%),
+    #000;
+  border: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.terminal-screen {
+  width: 100%;
+  max-width: 600px;
+  background: #000;
+  border: 1px solid rgba(0, 255, 65, 0.35);
+  border-radius: 4px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow:
+    inset 0 0 30px rgba(0, 255, 65, 0.04),
+    0 0 20px rgba(0, 255, 65, 0.1);
+  font-family: 'Courier New', 'Lucida Console', monospace;
+}
+
+.terminal-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.terminal-row {
+  font-size: 0.88rem;
+  color: #00ff41;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  text-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+}
+
+.terminal-cursor {
+  color: #00ff41;
+  font-size: 1rem;
+  animation: cursorBlink 0.8s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Standard Briefing ───────────────────────────────────── */
+.standard-briefing {
+  background: rgba(10, 26, 8, 0.97);
+}
+
+.std-briefing-panel {
+  max-width: 520px;
+  width: 100%;
+  background: rgba(15, 35, 12, 0.95);
+  border: 1.5px solid rgba(134, 239, 172, 0.25);
+  border-radius: 12px;
+  padding: 32px 28px 24px;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
+}
+
+.std-briefing-header {
+  font-size: 0.7rem;
+  color: #7a9e6a;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.std-briefing-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #86efac;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  text-shadow: 0 0 12px rgba(134, 239, 172, 0.4);
+}
+
+.std-briefing-text {
+  font-size: 0.92rem;
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ── Shared button ───────────────────────────────────────── */
+.briefing-btn {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #166534, #15803d);
+  color: #fff;
+  border: 1.5px solid rgba(134, 239, 172, 0.45);
+  border-radius: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.briefing-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(134, 239, 172, 0.35);
+}
+
+.briefing-btn:active { transform: scale(0.97); }
+
+/* ── Card Claim Overlay (post-victory) ───────────────────── */
+.gw-card-claim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.9);
+  animation: briefingFadeIn 0.4s ease forwards;
+  font-family: 'Exo 2', sans-serif;
+}
+
+.card-claim-panel {
+  max-width: 460px;
+  width: 100%;
+  background: linear-gradient(160deg, rgba(10,26,8,0.98), rgba(4,9,10,0.98));
+  border: 2px solid rgba(251, 191, 36, 0.5);
+  border-radius: 16px;
+  padding: 36px 28px 28px;
+  text-align: center;
+  box-shadow:
+    0 8px 48px rgba(0,0,0,0.8),
+    0 0 24px rgba(251,191,36,0.15);
+  animation: cardSlideUp 0.35s ease forwards;
+}
+
+@keyframes cardSlideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.card-claim-header {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: #fbbf24;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  animation: glitch 2s ease-in-out infinite;
+}
+
+@keyframes glitch {
+  0%,95%,100% { text-shadow: none; }
+  96% { text-shadow: 2px 0 #ef4444, -2px 0 #00ff41; }
+  97% { text-shadow: -2px 0 #ef4444, 2px 0 #00ff41; }
+  98% { text-shadow: none; }
+}
+
+.card-claim-unknown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 20px;
+  background: rgba(251, 191, 36, 0.04);
+  border: 1.5px dashed rgba(251, 191, 36, 0.3);
+  border-radius: 8px;
+  margin: 16px 0;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.card-claim-unknown:hover {
+  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(251, 191, 36, 0.55);
+}
+
+.card-claim-silhouette {
+  width: 60px;
+  height: 80px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  filter: brightness(0.5);
+}
+
+.card-claim-prompt {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #fbbf24;
+  text-transform: uppercase;
+}
+
+/* Revealed card */
+.card-reveal-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  background: rgba(22,101,52,0.15);
+  border: 1.5px solid rgba(134,239,172,0.35);
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.card-reveal-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #86efac;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.card-reveal-era {
+  font-size: 0.72rem;
+  color: #fbbf24;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.card-reveal-role {
+  font-size: 0.7rem;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: rgba(134,239,172,0.15);
+  color: #86efac;
+  border: 1px solid rgba(134,239,172,0.3);
+}
+
+.card-reveal-cost {
+  font-size: 0.85rem;
+  color: #a78bfa;
+  font-weight: 700;
+}
+
+.card-reveal-desc {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  line-height: 1.5;
+  text-align: center;
+  max-width: 340px;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .gw-briefing-overlay {
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    overflow-y: auto;
+    justify-content: flex-start;
+  }
+  .terminal-screen { padding: 16px 18px; }
+  .std-briefing-panel { padding: 24px 18px 20px; }
+  .bitos-dialogue { font-size: 0.95rem; padding: 14px; }
+}

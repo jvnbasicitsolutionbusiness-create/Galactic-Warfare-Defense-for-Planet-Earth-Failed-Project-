@@ -1,0 +1,335 @@
+﻿/* ============================================================
+   Chrono-Front: Galactic War — Global Base Styles
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --clr-bg:          #04060f;
+  --clr-bg2:         #060d1a;
+  --clr-primary:     #22d3ee;   /* galactic teal */
+  --clr-primary-dk:  #0891b2;
+  --clr-primary-glow:#67e8f9;
+  --clr-accent:      #f59e0b;   /* amber gold */
+  --clr-accent2:     #fb923c;   /* copper */
+  --clr-danger:      #ef4444;
+  --clr-text:        #e8f0ff;
+  --clr-text-dim:    #6b85a0;
+  --clr-panel:       rgba(4, 12, 24, 0.92);
+  --clr-panel-border:rgba(34, 211, 238, 0.25);
+
+  --font-title:      'Cinzel Decorative', serif;
+  --font-ui:         'Exo 2', 'Segoe UI', sans-serif;
+
+  --radius-sm:       6px;
+  --radius-md:       12px;
+  --radius-lg:       20px;
+
+  --shadow-glow:     0 0 20px rgba(74, 222, 128, 0.4);
+  --shadow-card:     0 4px 24px rgba(0, 0, 0, 0.6);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+@supports (height: 100dvh) {
+  html, body { min-height: 100dvh; }
+}
+
+/* Scrollable pages override */
+body.scrollable {
+  overflow-y: auto;
+}
+
+/* Focus visible outline for accessibility */
+:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 3px;
+}
+
+/* ── Utility ─────────────────────────────────────────────── */
+.hidden { display: none !important; }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   INTRO LOADING SCREEN — index.html
+   Military/alien war wallpaper with animated elements
+   ============================================================ */
+
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 15% 85%, rgba(34,211,238,0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 15%, rgba(124,58,237,0.18) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, #0a1a08 0%, #04080a 100%);
+  overflow: hidden;
+  transition: opacity 0.7s ease;
+}
+#intro-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+#intro-screen.gone { display: none; }
+
+/* Scanlines overlay */
+.intro-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.055) 3px, rgba(0,0,0,0.055) 4px
+  );
+  pointer-events: none;
+}
+
+/* Animated background orbs */
+.intro-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: introOrbDrift 12s ease-in-out infinite alternate;
+}
+.intro-bg-orb--green {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(34,211,238,0.14) 0%, transparent 65%);
+  bottom: -300px; left: -200px;
+  animation-duration: 14s;
+}
+.intro-bg-orb--purple {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(124,58,237,0.16) 0%, transparent 65%);
+  top: -150px; right: -150px;
+  animation-delay: -5s; animation-duration: 11s;
+}
+.intro-bg-orb--red {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(239,68,68,0.10) 0%, transparent 65%);
+  top: 40%; left: 30%;
+  animation-delay: -9s; animation-duration: 9s;
+}
+@keyframes introOrbDrift {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(40px,30px) scale(1.15); }
+}
+
+/* Battle scene — CSS silhouettes */
+.intro-scene {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 160px;
+  pointer-events: none;
+}
+.intro-ground-line {
+  position: absolute;
+  bottom: 60px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(74,222,128,0.4), transparent);
+}
+/* Military base silhouette (left) */
+.intro-base-structure {
+  position: absolute;
+  bottom: 62px; left: 8%;
+  width: 120px; height: 90px;
+  background: #1f2937;
+  clip-path: polygon(0% 100%, 0% 30%, 10% 30%, 10% 0%, 25% 0%, 25% 30%, 75% 30%, 75% 0%, 90% 0%, 90% 30%, 100% 30%, 100% 100%);
+  opacity: 0.7;
+  animation: introBaseGlow 3s ease-in-out infinite alternate;
+}
+@keyframes introBaseGlow {
+  0%   { box-shadow: 0 0 8px rgba(74,222,128,0.2); }
+  100% { box-shadow: 0 0 20px rgba(74,222,128,0.5); }
+}
+
+/* Alien silhouettes (right side) — walking toward base */
+.intro-alien-silhouette {
+  position: absolute;
+  bottom: 62px;
+  width: 28px; height: 46px;
+  background: #7c3aed;
+  clip-path: polygon(35% 0%, 65% 0%, 80% 15%, 90% 40%, 80% 55%, 70% 50%, 65% 100%, 35% 100%, 30% 50%, 20% 55%, 10% 40%, 20% 15%);
+  opacity: 0.65;
+}
+.intro-alien-silhouette--1 {
+  right: 18%; animation: introAlienWalk 8s linear infinite;
+}
+.intro-alien-silhouette--2 {
+  right: 30%; animation: introAlienWalk 8s linear infinite;
+  animation-delay: -2.5s; opacity: 0.5;
+}
+.intro-alien-silhouette--3 {
+  right: 42%; animation: introAlienWalk 8s linear infinite;
+  animation-delay: -5s; opacity: 0.4;
+}
+@keyframes introAlienWalk {
+  0%   { transform: translateX(0)     scaleX(1); }
+  49%  { transform: translateX(-80px) scaleX(1); }
+  50%  { transform: translateX(-80px) scaleX(-1); opacity: 0; }
+  51%  { transform: translateX(60px)  scaleX(-1); opacity: 0; }
+  52%  { transform: translateX(60px)  scaleX(1);  opacity: 0.6; }
+  100% { transform: translateX(-80px) scaleX(1); }
+}
+
+/* Content */
+.intro-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 24px;
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.intro-badge {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fef08a;
+  background: rgba(239,68,68,0.2);
+  border: 1px solid rgba(239,68,68,0.4);
+  border-radius: 3px;
+  padding: 3px 12px;
+  text-transform: uppercase;
+  animation: introBadgePulse 2s ease-in-out infinite;
+}
+@keyframes introBadgePulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+.intro-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-title);
+  user-select: none;
+}
+.intro-title-top {
+  font-size: clamp(1.8rem, 7vw, 3.2rem);
+  color: #86efac;
+  text-shadow: 0 0 14px rgba(34,211,238,0.6), 0 0 40px rgba(8,145,178,0.3);
+  letter-spacing: 0.06em;
+  animation: introTitleGlow 3s ease-in-out infinite alternate;
+}
+@keyframes introTitleGlow {
+  0%   { text-shadow: 0 0 14px rgba(34,211,238,0.5); }
+  100% { text-shadow: 0 0 28px rgba(34,211,238,0.9), 0 0 50px rgba(6,182,212,0.4); }
+}
+.intro-title-divider {
+  font-size: 1rem;
+  color: #fbbf24;
+  animation: introDividerSpin 6s linear infinite;
+}
+@keyframes introDividerSpin {
+  0%   { transform: rotate(0deg);   }
+  100% { transform: rotate(360deg); }
+}
+.intro-title-bottom {
+  font-size: clamp(1.8rem, 7vw, 3.2rem);
+  color: #fbbf24;
+  text-shadow: 0 0 14px rgba(251,191,36,0.7);
+  letter-spacing: 0.2em;
+}
+.intro-subtitle {
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  color: #6b85a0;
+  letter-spacing: 0.07em;
+  font-style: italic;
+}
+
+/* Progress bar */
+.intro-bar-wrap {
+  position: relative;
+  width: min(420px, 85vw);
+  height: 8px;
+  background: rgba(74,222,128,0.1);
+  border-radius: 4px;
+  border: 1px solid rgba(74,222,128,0.2);
+  overflow: hidden;
+}
+.intro-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #0891b2, #22d3ee);
+  border-radius: 4px;
+  transition: width 0.35s ease;
+  position: relative;
+  z-index: 1;
+}
+.intro-bar-glow {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(74,222,128,0.4), transparent);
+  animation: introBarShine 2s ease-in-out infinite;
+}
+@keyframes introBarShine {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.intro-status {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: #6b9e6b;
+  letter-spacing: 0.06em;
+  min-height: 1.2em;
+}
+
+/* Threat row */
+.intro-threat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.intro-threat-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 4px rgba(239,68,68,0.8);
+  animation: introDotBlink 1.6s ease-in-out infinite;
+}
+.intro-threat-dot:last-child { animation-delay: 0.3s; }
+@keyframes introDotBlink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+.intro-threat-text {
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #f87171;
+}

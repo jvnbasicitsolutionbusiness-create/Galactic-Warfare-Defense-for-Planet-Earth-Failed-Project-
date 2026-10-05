@@ -1,0 +1,24 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28">
+  <!--
+    Plasma Energy Projectile — blue orb
+    Matches plasma_energy_generator colour palette.
+    Colours: outer halo #bfdbfe | orb #3b82f6 | bright #60a5fa | inner #fff | orbit #22d3ee
+  -->
+  <!-- Outer halo -->
+  <circle cx="14" cy="14" r="13"  fill="#bfdbfe" opacity="0.09"/>
+  <!-- Secondary glow -->
+  <circle cx="14" cy="14" r="10"  fill="#3b82f6"  opacity="0.22"/>
+  <!-- Orbital ring -->
+  <ellipse cx="14" cy="14" rx="11" ry="3.5" fill="none" stroke="#22d3ee" stroke-width="1.5" opacity="0.75"/>
+  <!-- Main orb body -->
+  <circle cx="14" cy="14" r="7.5" fill="#3b82f6" opacity="0.92"/>
+  <!-- Bright inner core -->
+  <circle cx="12" cy="12" r="3.8" fill="#60a5fa" opacity="0.88"/>
+  <!-- Lightning bolt inside -->
+  <polyline points="14,9 11,14 15,14 12,19" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.75" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Specular glint -->
+  <circle cx="10" cy="10" r="1.8" fill="#ffffff" opacity="0.65"/>
+  <!-- Orbit dot -->
+  <circle cx="25" cy="14" r="2"   fill="#22d3ee" opacity="0.9"/>
+  <circle cx="3"  cy="14" r="1.2" fill="#22d3ee" opacity="0.45"/>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 112" role="img" aria-label="Ion wing alien">
+  <ellipse cx="63" cy="96" rx="31" ry="5" fill="#101b25" opacity=".45"/>
+  <path d="m47 55-39-26 11 37-13 16 42-10m34-17 39-26-11 37 13 16-42-10" fill="#b0d8ed" fill-opacity=".38" stroke="#52738b" stroke-width="3" stroke-linejoin="round"/>
+  <path d="m47 55-39-26 23 43m43-17 39-26-23 43" fill="none" stroke="#e2f8ff" stroke-width="2"/>
+  <path d="m49 67-9 17 18 3 5-11 6 11 18-3-10-17" fill="#4d6687" stroke="#26394c" stroke-width="3"/>
+  <path d="M43 51q-2-21 12-27 17-5 27 11l-5 21-17 9-14-5z" fill="#68839f" stroke="#334c63" stroke-width="3"/>
+  <path d="m47 42q7-6 13 0m5 0q6-6 12 0" fill="none" stroke="#72f6ff" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="54" cy="43" r="2" fill="#fff"/><circle cx="71" cy="43" r="2" fill="#fff"/>
+  <path d="m54 56 7 4 7-4" fill="none" stroke="#26394c" stroke-width="2"/>
+  <path d="M62 68v17m-7-5 7 7 7-7" fill="none" stroke="#72f6ff" stroke-width="3" stroke-linecap="round"/>
+</svg>

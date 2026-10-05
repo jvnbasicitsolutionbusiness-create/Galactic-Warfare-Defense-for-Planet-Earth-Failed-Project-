@@ -1,0 +1,26 @@
+{
+  "name": "galactic-warfare-defense-for-planet-earth",
+  "version": "1.0.1",
+  "description": "Galactic Warfare: Defense for Planet Earth - A 2D lane-based tower defense strategy game",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "test": "echo \"No automated tests configured yet\" && exit 0"
+  },
+  "keywords": ["game", "tower-defense", "phaser3", "strategy"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "4.19.2",
+    "helmet": "7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

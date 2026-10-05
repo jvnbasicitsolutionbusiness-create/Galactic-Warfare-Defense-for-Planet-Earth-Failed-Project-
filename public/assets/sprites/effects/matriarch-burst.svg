@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Matriarch defeat burst">
+  <path d="m24 2 4 11 11-8-5 12 12 3-12 5 8 11-13-5-4 15-4-15-13 5 8-11-12-5 12-3-5-12 11 8z" fill="#54ddbe" fill-opacity=".3" stroke="#8affdd" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="24" cy="24" r="12" fill="#278f80" opacity=".8"/>
+  <circle cx="24" cy="24" r="6" fill="#d6fff2"/>
+  <circle cx="22" cy="22" r="2.5" fill="#fff"/>
+</svg>

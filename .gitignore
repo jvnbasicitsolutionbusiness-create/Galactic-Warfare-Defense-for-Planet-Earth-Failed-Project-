@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+
+# Editor directories
+.vscode/
+.idea/
+
+# Firebase service account keys
+serviceAccountKey.json
+firebase-adminsdk*.json
+
+# Temporary files
+*.tmp
+*.temp

@@ -8,7 +8,7 @@ export default defineConfig({
       input: {
         main: "index.html",
         auth: "auth.html",
-        game: "game.html",
+        game: "game.html"
       },
 
       output: {
@@ -23,8 +23,8 @@ export default defineConfig({
           ) {
             return "react-runtime";
           }
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 });

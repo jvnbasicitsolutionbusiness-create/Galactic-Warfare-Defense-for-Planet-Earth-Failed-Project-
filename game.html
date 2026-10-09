@@ -12,6 +12,67 @@
   <!-- Adaptive network runtime — must load before the auth guard -->
   <script src="public/js/runtime.js"></script>
 
+  
+<script>
+/* =========================================================
+   GALACTIC WARFARE — LOGOUT MODAL UI
+   UI controls only — existing logout logic remains untouched.
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  function initializeLogoutModal() {
+    const modal = document.getElementById("gw-logout-modal");
+    const cancel = document.getElementById("gw-logout-cancel");
+    const confirm = document.getElementById("gw-logout-confirm");
+
+    if (!modal || !cancel || !confirm) {
+      return;
+    }
+
+    function openModal() {
+      modal.hidden = false;
+      cancel.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+    }
+
+    window.GWLogoutModal = {
+      open: openModal,
+      close: closeModal
+    };
+
+    cancel.addEventListener("click", function () {
+      closeModal();
+    });
+
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !modal.hidden) {
+        closeModal();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeLogoutModal
+    );
+  } else {
+    initializeLogoutModal();
+  }
+})();
+</script>
+
   <!-- Auth Guard -->
   <script>
   (function () {

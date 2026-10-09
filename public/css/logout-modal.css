@@ -1,0 +1,120 @@
+```css
+/* Galactic Warfare — Logout Confirmation UI */
+
+.gw-logout-overlay[hidden] {
+  display: none !important;
+}
+
+.gw-logout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.58);
+  font-family: "Exo 2", sans-serif;
+}
+
+.gw-logout-card {
+  box-sizing: border-box;
+  width: 148px;
+  min-height: 200px;
+  padding: 17px 14px 12px;
+  border-radius: 7px;
+  background: #eeeeee;
+  color: #222222;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  animation: gw-logout-appear 160ms ease-out;
+}
+
+.gw-logout-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 13px;
+}
+
+.gw-logout-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gw-logout-title,
+.gw-logout-message {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.gw-logout-message {
+  margin-bottom: 16px;
+}
+
+.gw-logout-button {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 25px;
+  margin-top: 5px;
+  padding: 5px 4px;
+  border: 1px solid #079dca;
+  border-radius: 18px;
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.gw-logout-stay {
+  color: #ffffff;
+  background: #079bd0;
+}
+
+.gw-logout-leave {
+  color: #079bd0;
+  background: transparent;
+}
+
+.gw-logout-stay:hover {
+  background: #0784b1;
+}
+
+.gw-logout-leave:hover {
+  color: #ffffff;
+  background: #079bd0;
+}
+
+.gw-logout-button:active {
+  transform: scale(0.97);
+}
+
+.gw-logout-button:focus-visible {
+  outline: 2px solid #202020;
+  outline-offset: 3px;
+}
+
+@keyframes gw-logout-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gw-logout-card {
+    animation: none;
+  }
+
+  .gw-logout-button {
+    transition: none;
+  }
+}
+```

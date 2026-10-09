@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -126,6 +126,65 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Logout confirmation styles; kept here so the UI works without editing menu.css. -->
+  <style>
+    #quitOverlay[hidden], .gw-logout-overlay[hidden] { display: none !important; }
+    .gw-logout-overlay {
+      position: fixed; inset: 0; z-index: 99999; display: flex;
+      align-items: center; justify-content: center; padding: 20px;
+      background: rgba(0, 0, 0, .72); backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px); font-family: "Exo 2", sans-serif;
+    }
+    .gw-logout-card {
+      box-sizing: border-box; width: min(100%, 340px); padding: 28px 26px 24px;
+      border: 1px solid rgba(7, 157, 202, .55); border-radius: 14px;
+      background: #eee; color: #222; text-align: center;
+      box-shadow: 0 0 25px rgba(7,157,202,.15), 0 18px 55px rgba(0,0,0,.5);
+      animation: gw-logout-appear 180ms ease-out;
+    }
+    .gw-logout-icon {
+      display: flex; align-items: center; justify-content: center; width: 64px; height: 64px;
+      margin: 0 auto 18px; border: 1px solid rgba(7,157,202,.3); border-radius: 50%;
+      background: rgba(7,157,202,.09);
+    }
+    .gw-logout-icon svg { display: block; width: 42px; height: 42px; }
+    .gw-logout-title {
+      margin: 0 0 10px; color: #183747; font-family: "Exo 2", sans-serif;
+      font-size: 22px; font-weight: 800; letter-spacing: 1.5px;
+    }
+    .gw-logout-message {
+      margin: 0 0 24px; color: #555b61; font-family: "Exo 2", sans-serif;
+      font-size: 14px; line-height: 1.6;
+    }
+    .gw-logout-button {
+      box-sizing: border-box; display: block; width: 100%; min-height: 42px;
+      margin-top: 10px; padding: 10px 16px; border: 1px solid #079dca; border-radius: 24px;
+      font-family: "Exo 2", sans-serif; font-size: 13px; font-weight: 800;
+      letter-spacing: 1px; cursor: pointer;
+      transition: background 150ms ease, color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+    }
+    .gw-logout-stay { color: #fff; background: #079bd0; }
+    .gw-logout-leave { color: #0784b1; background: transparent; }
+    .gw-logout-stay:hover { background: #0784b1; box-shadow: 0 4px 14px rgba(7,132,177,.25); }
+    .gw-logout-leave:hover { color: #fff; background: #079bd0; }
+    .gw-logout-button:active { transform: scale(.98); }
+    .gw-logout-button:focus-visible { outline: 2px solid #202020; outline-offset: 4px; }
+    .gw-logout-button:disabled { opacity: .65; cursor: wait; }
+    .gw-logout-status { min-height: 0; margin: 8px 0 0; color: #555b61; font-size: 12px; }
+    .gw-logout-status:empty { display: none; }
+    @keyframes gw-logout-appear {
+      from { opacity: 0; transform: translateY(8px) scale(.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @media (max-width: 400px) {
+      .gw-logout-card { padding: 24px 20px 20px; }
+      .gw-logout-title { font-size: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .gw-logout-card, .gw-logout-button { animation: none; transition: none; }
+    }
+  </style>
 </head>
 <body class="menu-page">
 
@@ -632,19 +691,37 @@
     </div>
   </div>
 
-  <!-- Quit confirm -->
-  <div class="overlay" id="quitOverlay" role="dialog" aria-modal="true" aria-labelledby="quitTitle" hidden>
-    <div class="overlay-box">
-      <h2 class="overlay-title" id="quitTitle">QUIT?</h2>
-      <p class="overlay-body">Progress is saved automatically. Are you sure you want to quit?</p>
-      <div class="menu-btn-row" style="margin-top:8px">
-        <button class="menu-btn menu-btn--primary" id="btnQuitConfirm" aria-label="Confirm quit">
-          <span class="btn-label">YES, QUIT</span>
-        </button>
-        <button class="menu-btn menu-btn--secondary" id="btnQuitCancel" aria-label="Cancel">
-          <span class="btn-label">NO, STAY</span>
-        </button>
+  <!-- Logout Confirmation Modal -->
+  <div
+    class="gw-logout-overlay"
+    id="quitOverlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="quitTitle"
+    aria-describedby="quitMessage"
+    hidden
+  >
+    <div class="gw-logout-card" role="document">
+      <div class="gw-logout-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" focusable="false">
+          <path d="M27 10H13C10.8 10 9 11.8 9 14V50C9 52.2 10.8 54 13 54H27"
+            stroke="#079bd0" stroke-width="4" stroke-linecap="round" />
+          <path d="M35 20L47 32L35 44" stroke="#079bd0" stroke-width="4"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M23 32H47" stroke="#079bd0" stroke-width="4" stroke-linecap="round" />
+        </svg>
       </div>
+      <h2 class="gw-logout-title" id="quitTitle">LOG OUT?</h2>
+      <p class="gw-logout-message" id="quitMessage">
+        Are you sure you want to log out of Galactic Warfare?
+      </p>
+      <button type="button" class="gw-logout-button gw-logout-stay" id="btnQuitCancel">
+        STAY
+      </button>
+      <button type="button" class="gw-logout-button gw-logout-leave" id="btnQuitConfirm">
+        LOG OUT
+      </button>
+      <p class="gw-logout-status" id="gwLogoutStatus" aria-live="polite"></p>
     </div>
   </div>
 
@@ -759,5 +836,102 @@
       window.location.replace('auth.html');
   };
   </script>
+
+  <!-- Logout confirmation controller. Capture handlers prevent conflicts with legacy quit handlers. -->
+  <script>
+  (function () {
+    'use strict';
+
+    function initLogoutConfirmation() {
+      var modal = document.getElementById('quitOverlay');
+      var openButton = document.getElementById('btnQuit');
+      var confirmButton = document.getElementById('btnQuitConfirm');
+      var cancelButton = document.getElementById('btnQuitCancel');
+      var status = document.getElementById('gwLogoutStatus');
+
+      if (!modal || !openButton || !confirmButton || !cancelButton) return;
+
+      function openModal(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+        modal.hidden = false;
+        if (status) status.textContent = '';
+        window.setTimeout(function () { cancelButton.focus(); }, 0);
+      }
+
+      function closeModal(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+        modal.hidden = true;
+        if (status) status.textContent = '';
+        openButton.focus();
+      }
+
+      openButton.addEventListener('click', openModal, true);
+      cancelButton.addEventListener('click', closeModal, true);
+
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) closeModal(event);
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (modal.hidden) return;
+        if (event.key === 'Escape') {
+          closeModal(event);
+          return;
+        }
+        if (event.key === 'Tab') {
+          var focusable = [cancelButton, confirmButton].filter(function (button) {
+            return !button.disabled;
+          });
+          if (!focusable.length) return;
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault(); last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault(); first.focus();
+          }
+        }
+      }, true);
+
+      confirmButton.addEventListener('click', async function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if (confirmButton.disabled) return;
+
+        confirmButton.disabled = true;
+        cancelButton.disabled = true;
+        confirmButton.textContent = 'LOGGING OUT...';
+        if (status) status.textContent = 'Saving your session and progression...';
+
+        try {
+          if (typeof window.gwLogout === 'function') {
+            await window.gwLogout();
+          } else {
+            window.location.replace('auth.html');
+          }
+        } catch (error) {
+          console.error('[Logout] Logout failed:', error);
+          confirmButton.disabled = false;
+          cancelButton.disabled = false;
+          confirmButton.textContent = 'LOG OUT';
+          if (status) status.textContent = 'Logout could not be completed. Please try again.';
+        }
+      }, true);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLogoutConfirmation);
+    } else {
+      initLogoutConfirmation();
+    }
+  })();
+  </script>
+
 </body>
 </html>

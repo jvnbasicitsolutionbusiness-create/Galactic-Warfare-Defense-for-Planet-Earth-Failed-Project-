@@ -392,35 +392,38 @@
        * sessionStorage flag and initialize the game without account auth.
        */
       guestButton.addEventListener('click', function () {
-        if (guestButton.disabled) return;
+  if (guestButton.disabled) return;
 
-        guestButton.disabled = true;
-        guestButton.textContent = 'PREPARING DEMO...';
+  guestButton.disabled = true;
+  guestButton.textContent = 'PREPARING DEMO...';
 
-        if (guestStatus) {
-          guestStatus.textContent = '';
-        }
+  if (guestStatus) {
+    guestStatus.textContent = 'Preparing unsaved demo...';
+  }
 
-        try {
-          sessionStorage.setItem('gw_guest_mode', 'true');
+  try {
+    // Use the canonical session keys required by index.html.
+    sessionStorage.setItem('gw_mode', 'guest');
+    sessionStorage.setItem('gw_entry_authorized', '1');
+    sessionStorage.setItem('gw_guest_mode', 'true');
 
-          if (guestStatus) {
-            guestStatus.textContent = 'Launching unsaved demo...';
-          }
+    // Remove stale guest markers from older versions.
+    sessionStorage.removeItem('gw_guess_mode');
 
-          window.location.assign('index.html?mode=guest');
-        } catch (error) {
-          guestButton.disabled = false;
-          guestButton.textContent = 'PLAY AS GUEST · UNSAVED DEMO';
+    // Do not delete registered account tokens or saved user data.
+    window.location.assign('index.html?mode=guest');
+  } catch (error) {
+    guestButton.disabled = false;
+    guestButton.textContent = 'PLAY AS GUEST · UNSAVED DEMO';
 
-          if (guestStatus) {
-            guestStatus.textContent =
-              'Guest mode could not start. Please enable session storage and try again.';
-          }
+    if (guestStatus) {
+      guestStatus.textContent =
+        'Unable to start guest mode. Please reload and try again.';
+    }
 
-          console.error('Guest mode launch failed:', error);
-        }
-      });
+    console.error('[Guest Mode] Launch failed:', error);
+  }
+});
 
       /*
        * Loading screen.

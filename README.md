@@ -1,4 +1,4 @@
-﻿# Garden Warfare: Reborn
+﻿# Galactic Warfare: Defense for Planet Earth
 
 A 2D lane-based tower defense strategy game built with Phaser 3, Node.js, and Express.
 Defend your garden from waves of original enemies by placing plant defenders in 5 lanes.

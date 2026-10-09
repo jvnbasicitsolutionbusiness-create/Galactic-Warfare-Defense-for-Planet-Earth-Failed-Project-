@@ -117,4 +117,15 @@
     transition: none;
   }
 }
+
+
+/* Critical: a closed logout modal must never be visible. */
+#gw-logout-modal[hidden] {
+  display: none !important;
+}
+
+/* Only display the overlay when JavaScript explicitly opens it. */
+#gw-logout-modal:not([hidden]) {
+  display: flex;
+}
 ```

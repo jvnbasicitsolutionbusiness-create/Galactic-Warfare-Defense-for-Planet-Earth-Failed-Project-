@@ -1,43 +1,54 @@
-﻿<!DOCTYPE html>
+```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#1a3a0a" />
   <meta name="description" content="Galactic Warfare: Defense for Planet Earth — Defend Earth against alien invasion." />
+
   <title>Galactic Warfare: Defense for Planet Earth</title>
 
   <!-- Adaptive network runtime — must load before the auth guard -->
   <script src="public/js/runtime.js"></script>
 
-  <!-- ── Auth Guard ──────────────────────────────────────────
-       Same logic as index.html — must run before game scripts.
-  ──────────────────────────────────────────────────────────── -->
+  <!-- Auth Guard -->
   <script>
   (function () {
-    // Support both old token key (gw_id_token) and new (gw_session_token)
-    var TOKEN_KEY  = 'gw_session_token';
+    var TOKEN_KEY = 'gw_session_token';
     var TOKEN_KEY2 = 'gw_id_token';
-    var AUTH_PAGE  = 'auth.html';
-    var token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY2);
+    var AUTH_PAGE = 'auth.html';
+
+    var token =
+      localStorage.getItem(TOKEN_KEY) ||
+      localStorage.getItem(TOKEN_KEY2);
+
     var mode = sessionStorage.getItem('gw_mode');
-    var authorized = sessionStorage.getItem('gw_entry_authorized') === '1';
+    var authorized =
+      sessionStorage.getItem('gw_entry_authorized') === '1';
+
     if (!authorized || (mode !== 'guest' && !token)) {
       window.location.replace(AUTH_PAGE);
-      throw new Error('[Auth Guard] No session — redirecting to ' + AUTH_PAGE);
+      throw new Error(
+        '[Auth Guard] No session — redirecting to ' + AUTH_PAGE
+      );
     }
+
     if (mode === 'guest') return;
-    // Background verify — non-blocking, adapts to backend OR direct mode.
+
     setTimeout(function () {
       if (!window.GWNet) return;
+
       window.GWNet.verify(token)
         .then(function (d) {
           if (!d || !d.ok) {
             localStorage.removeItem(TOKEN_KEY);
             localStorage.removeItem(TOKEN_KEY2);
             localStorage.removeItem('gw_user');
+
             sessionStorage.removeItem('gw_entry_authorized');
             sessionStorage.removeItem('gw_mode');
+
             window.location.replace(AUTH_PAGE);
           }
         })
@@ -49,53 +60,229 @@
   <link rel="stylesheet" href="public/css/main.css" />
   <link rel="stylesheet" href="public/css/game.css" />
   <link rel="stylesheet" href="public/css/briefing.css" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Exo+2:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Logout modal styling -->
+  <style>
+    .gw-logout-overlay[hidden] {
+      display: none !important;
+    }
+
+    .gw-logout-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.58);
+      font-family: "Exo 2", sans-serif;
+    }
+
+    .gw-logout-card {
+      box-sizing: border-box;
+      width: 148px;
+      min-height: 200px;
+      padding: 17px 14px 12px;
+      border-radius: 7px;
+      background: #eeeeee;
+      color: #222222;
+      text-align: center;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+      animation: gw-logout-appear 160ms ease-out;
+    }
+
+    .gw-logout-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 13px;
+    }
+
+    .gw-logout-icon svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .gw-logout-title,
+    .gw-logout-message {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .gw-logout-message {
+      margin-bottom: 16px;
+    }
+
+    .gw-logout-button {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      min-height: 25px;
+      margin-top: 5px;
+      padding: 5px 4px;
+      border: 1px solid #079dca;
+      border-radius: 18px;
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      cursor: pointer;
+      transition:
+        background 150ms ease,
+        transform 150ms ease;
+    }
+
+    .gw-logout-stay {
+      color: #ffffff;
+      background: #079bd0;
+    }
+
+    .gw-logout-leave {
+      color: #079bd0;
+      background: transparent;
+    }
+
+    .gw-logout-stay:hover {
+      background: #0784b1;
+    }
+
+    .gw-logout-leave:hover {
+      color: #ffffff;
+      background: #079bd0;
+    }
+
+    .gw-logout-button:active {
+      transform: scale(0.97);
+    }
+
+    .gw-logout-button:focus-visible {
+      outline: 2px solid #202020;
+      outline-offset: 3px;
+    }
+
+    @keyframes gw-logout-appear {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gw-logout-card {
+        animation: none;
+      }
+
+      .gw-logout-button {
+        transition: none;
+      }
+    }
+  </style>
 </head>
+
 <body class="game-page">
 
-  <div id="game-container" role="main" aria-label="Game battlefield"></div>
-  <button id="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen" hidden>
+  <!-- Game battlefield -->
+  <div
+    id="game-container"
+    role="main"
+    aria-label="Game battlefield"
+  ></div>
+
+  <!-- Fullscreen button -->
+  <button
+    id="fullscreen-toggle"
+    type="button"
+    aria-label="Enter full screen"
+    title="Enter full screen"
+    hidden
+  >
     <span aria-hidden="true">⛶</span>
     <span class="sr-only">Full screen</span>
   </button>
-  <p id="fullscreen-status" class="sr-only" role="status" aria-live="polite"></p>
+
+  <p
+    id="fullscreen-status"
+    class="sr-only"
+    role="status"
+    aria-live="polite"
+  ></p>
+
+  <!-- Fullscreen controls: original logic preserved -->
   <script>
   (function () {
     var button = document.getElementById('fullscreen-toggle');
     var status = document.getElementById('fullscreen-status');
     var target = document.getElementById('game-container');
+
     if (!button || !target) return;
 
     function isFullscreen() {
-      return document.fullscreenElement === target || document.webkitFullscreenElement === target;
+      return document.fullscreenElement === target ||
+        document.webkitFullscreenElement === target;
     }
+
     function updateButton() {
-      var label = isFullscreen() ? 'Exit full screen' : 'Enter full screen';
+      var label = isFullscreen()
+        ? 'Exit full screen'
+        : 'Enter full screen';
+
       button.setAttribute('aria-label', label);
       button.title = label;
     }
+
     function showError(error) {
-      console.warn('[GW] Full-screen mode is unavailable:', error);
-      if (status) status.textContent = 'Full-screen mode is unavailable in this browser.';
+      console.warn(
+        '[GW] Full-screen mode is unavailable:',
+        error
+      );
+
+      if (status) {
+        status.textContent =
+          'Full-screen mode is unavailable in this browser.';
+      }
     }
 
     function toggleFullscreen() {
       var action;
       var supported = false;
+
       try {
         if (isFullscreen()) {
-          if (document.exitFullscreen) { action = document.exitFullscreen(); supported = true; }
-          else if (document.webkitExitFullscreen) { action = document.webkitExitFullscreen(); supported = true; }
+          if (document.exitFullscreen) {
+            action = document.exitFullscreen();
+            supported = true;
+          } else if (document.webkitExitFullscreen) {
+            action = document.webkitExitFullscreen();
+            supported = true;
+          }
         } else {
-          if (target.requestFullscreen) { action = target.requestFullscreen(); supported = true; }
-          else if (target.webkitRequestFullscreen) { action = target.webkitRequestFullscreen(); supported = true; }
+          if (target.requestFullscreen) {
+            action = target.requestFullscreen();
+            supported = true;
+          } else if (target.webkitRequestFullscreen) {
+            action = target.webkitRequestFullscreen();
+            supported = true;
+          }
         }
       } catch (error) {
         showError(error);
         return;
       }
+
       if (!supported) {
         showError(new Error('Fullscreen API is not supported.'));
       } else if (action && typeof action.then === 'function') {
@@ -104,17 +291,38 @@
         window.setTimeout(updateButton, 0);
       }
     }
-    window.GWFullscreen = { toggle: toggleFullscreen };
+
+    window.GWFullscreen = {
+      toggle: toggleFullscreen
+    };
+
     button.addEventListener('click', toggleFullscreen);
-    window.addEventListener('gw:pause-open', function () { button.hidden = false; });
-    window.addEventListener('gw:pause-close', function () { button.hidden = true; });
+
+    window.addEventListener('gw:pause-open', function () {
+      button.hidden = false;
+    });
+
+    window.addEventListener('gw:pause-close', function () {
+      button.hidden = true;
+    });
+
     document.addEventListener('keydown', function (event) {
       var targetTag = event.target && event.target.tagName;
-      if (event.key.toLowerCase() !== 'f' || event.altKey || event.ctrlKey || event.metaKey ||
-          ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(targetTag) !== -1) return;
+
+      if (
+        event.key.toLowerCase() !== 'f' ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(targetTag) !== -1
+      ) {
+        return;
+      }
+
       event.preventDefault();
       toggleFullscreen();
     });
+
     document.addEventListener('fullscreenchange', updateButton);
     document.addEventListener('webkitfullscreenchange', updateButton);
   })();
@@ -123,14 +331,165 @@
   <!-- Loading screen -->
   <div id="load-screen" aria-live="polite">
     <div class="load-inner">
-      <h2 class="load-title">GALACTIC WARFARE: DEFENSE FOR PLANET EARTH</h2>
-      <div class="load-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="loadProgress">
-        <div class="load-bar-fill" id="loadBarFill"></div>
+      <h2 class="load-title">
+        GALACTIC WARFARE: DEFENSE FOR PLANET EARTH
+      </h2>
+
+      <div
+        class="load-bar-wrap"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        id="loadProgress"
+      >
+        <div
+          class="load-bar-fill"
+          id="loadBarFill"
+        ></div>
       </div>
-      <p class="load-status" id="loadStatus">Initializing…</p>
-      <button class="loading-audio-toggle" type="button" data-audio-toggle aria-pressed="false">ENABLE SOUND</button>
+
+      <p class="load-status" id="loadStatus">
+        Initializing…
+      </p>
+
+      <button
+        class="loading-audio-toggle"
+        type="button"
+        data-audio-toggle
+        aria-pressed="false"
+      >
+        ENABLE SOUND
+      </button>
     </div>
   </div>
+
+  <!--
+    Logout confirmation modal.
+    Hidden by default; does not cover the game unless opened.
+  -->
+  <div
+    id="gw-logout-modal"
+    class="gw-logout-overlay"
+    role="presentation"
+    hidden
+  >
+    <div
+      class="gw-logout-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gw-logout-title"
+      aria-describedby="gw-logout-message"
+    >
+      <div class="gw-logout-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none">
+          <path
+            d="M15 11 35 18V53L15 46Z"
+            fill="#f2b6bb"
+            stroke="#202020"
+            stroke-width="2"
+          />
+
+          <path
+            d="M19 9 39 16V49L19 42Z"
+            fill="#eeeeee"
+            stroke="#202020"
+            stroke-width="2"
+          />
+
+          <path
+            d="M39 16H48Q51 16 51 20V25"
+            stroke="#202020"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+
+          <path
+            d="M35 31H57M49 23 57 31 49 39"
+            stroke="#202020"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+
+      <p id="gw-logout-title" class="gw-logout-title">
+        Oh no! You're leaving...
+      </p>
+
+      <p id="gw-logout-message" class="gw-logout-message">
+        Are you sure?
+      </p>
+
+      <button
+        type="button"
+        id="gw-logout-cancel"
+        class="gw-logout-button gw-logout-stay"
+      >
+        Naah, Just Kidding
+      </button>
+
+      <button
+        type="button"
+        id="gw-logout-confirm"
+        class="gw-logout-button gw-logout-leave"
+      >
+        Yes, Log Me Out
+      </button>
+    </div>
+  </div>
+
+  <!-- Logout modal UI controls only -->
+  <script>
+  (function () {
+    'use strict';
+
+    var modal = document.getElementById('gw-logout-modal');
+    var cancel = document.getElementById('gw-logout-cancel');
+    var confirm = document.getElementById('gw-logout-confirm');
+
+    if (!modal || !cancel || !confirm) return;
+
+    function openModal() {
+      modal.hidden = false;
+      cancel.focus();
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+    }
+
+    /*
+      Other existing game scripts can open the modal using:
+      window.GWLogoutModal.open();
+    */
+    window.GWLogoutModal = {
+      open: openModal,
+      close: closeModal
+    };
+
+    cancel.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !modal.hidden) {
+        closeModal();
+      }
+    });
+
+    /*
+      Intentionally no new logout logic here.
+      Connect this button to the existing logout handler
+      after identifying that handler in the project.
+    */
+  })();
+  </script>
 
   <!-- Firebase SDK (compat mode) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -140,12 +499,14 @@
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 
   <script src="public/js/audio.js"></script>
-  <script>window.GWAudio.setScene('loading');</script>
+  <script>
+    window.GWAudio.setScene('loading');
+  </script>
 
-  <!-- Config (first — defines GW namespace) -->
+  <!-- Config -->
   <script src="public/js/config.js"></script>
 
-  <!-- New systems (load before progression) -->
+  <!-- New systems -->
   <script src="public/js/game/firebase.js"></script>
   <script src="public/js/game/sheets-client.js"></script>
   <script src="public/js/game/progression.js"></script>
@@ -154,7 +515,7 @@
   <script src="public/js/game/sprites.js"></script>
   <script src="public/js/game/briefing.js"></script>
 
-  <!-- Core game subsystems (dependency order) -->
+  <!-- Core game subsystems -->
   <script src="public/js/game/levels.js"></script>
   <script src="public/js/game/characters.js"></script>
   <script src="public/js/game/enemies.js"></script>
@@ -173,3 +534,4 @@
 
 </body>
 </html>
+```

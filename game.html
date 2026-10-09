@@ -361,48 +361,61 @@
     })();
   </script>
 
-  <!-- Logout modal controls: initialize only once -->
-  <script>
-    (function () {
-      'use strict';
+ <!-- Logout modal controls -->
+<script>
+(function () {
+  'use strict';
 
-      var modal = document.getElementById('gw-logout-modal');
-      var cancel = document.getElementById('gw-logout-cancel');
-      var confirm = document.getElementById('gw-logout-confirm');
+  var modal = document.getElementById('gw-logout-modal');
+  var cancel = document.getElementById('gw-logout-cancel');
+  var confirm = document.getElementById('gw-logout-confirm');
 
-      if (!modal || !cancel || !confirm) return;
+  if (!modal || !cancel || !confirm) return;
 
-      function openModal() {
-        modal.hidden = false;
-        cancel.focus();
-      }
+  // Always start with the modal closed.
+  modal.hidden = true;
 
-      function closeModal() {
-        modal.hidden = true;
-      }
+  function openModal() {
+    modal.hidden = false;
+    cancel.focus();
+  }
 
-      window.GWLogoutModal = {
-        open: openModal,
-        close: closeModal
-      };
+  function closeModal() {
+    modal.hidden = true;
+  }
 
-      cancel.addEventListener('click', closeModal);
+  window.GWLogoutModal = {
+    open: openModal,
+    close: closeModal
+  };
 
-      modal.addEventListener('click', function (event) {
-        if (event.target === modal) {
-          closeModal();
-        }
-      });
+  // Only an explicit logout-button click opens the modal.
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-action="logout"]');
 
-      document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && !modal.hidden) {
-          closeModal();
-        }
-      });
+    if (!button) return;
 
-      // Connect the confirm button to your EXISTING logout handler.
-    })();
-  </script>
+    event.preventDefault();
+    openModal();
+  });
+
+  cancel.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !modal.hidden) {
+      closeModal();
+    }
+  });
+
+  // Keep your existing logout-confirmation handler here.
+})();
+</script>
 
   <!-- Main entry point -->
   <script src="public/js/main.js"></script>

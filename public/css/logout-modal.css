@@ -128,4 +128,159 @@
 #gw-logout-modal:not([hidden]) {
   display: flex;
 }
+
+
+/* Galactic Warfare — Logout Confirmation UI */
+
+.gw-logout-overlay[hidden],
+#quitOverlay[hidden] {
+  display: none !important;
+}
+
+.gw-logout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  font-family: "Exo 2", sans-serif;
+}
+
+.gw-logout-card {
+  box-sizing: border-box;
+  width: min(100%, 340px);
+  padding: 28px 26px 24px;
+  border: 1px solid rgba(7, 157, 202, 0.55);
+  border-radius: 14px;
+  background: #eeeeee;
+  color: #222222;
+  text-align: center;
+  box-shadow:
+    0 0 25px rgba(7, 157, 202, 0.15),
+    0 18px 55px rgba(0, 0, 0, 0.5);
+  animation: gw-logout-appear 180ms ease-out;
+}
+
+.gw-logout-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border: 1px solid rgba(7, 157, 202, 0.3);
+  border-radius: 50%;
+  background: rgba(7, 157, 202, 0.09);
+}
+
+.gw-logout-icon svg {
+  display: block;
+  width: 42px;
+  height: 42px;
+}
+
+.gw-logout-title {
+  margin: 0 0 10px;
+  color: #183747;
+  font-family: "Exo 2", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.gw-logout-message {
+  margin: 0 0 24px;
+  color: #555b61;
+  font-family: "Exo 2", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.gw-logout-button {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 42px;
+  margin-top: 10px;
+  padding: 10px 16px;
+  border: 1px solid #079dca;
+  border-radius: 24px;
+  font-family: "Exo 2", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.gw-logout-stay {
+  color: #ffffff;
+  background: #079bd0;
+}
+
+.gw-logout-leave {
+  color: #0784b1;
+  background: transparent;
+}
+
+.gw-logout-stay:hover {
+  background: #0784b1;
+  box-shadow: 0 4px 14px rgba(7, 132, 177, 0.25);
+}
+
+.gw-logout-leave:hover {
+  color: #ffffff;
+  background: #079bd0;
+}
+
+.gw-logout-button:active {
+  transform: scale(0.98);
+}
+
+.gw-logout-button:focus-visible {
+  outline: 2px solid #202020;
+  outline-offset: 4px;
+}
+
+@keyframes gw-logout-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 400px) {
+  .gw-logout-card {
+    padding: 24px 20px 20px;
+  }
+
+  .gw-logout-title {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gw-logout-card {
+    animation: none;
+  }
+
+  .gw-logout-button {
+    transition: none;
+  }
+}
+
 ```

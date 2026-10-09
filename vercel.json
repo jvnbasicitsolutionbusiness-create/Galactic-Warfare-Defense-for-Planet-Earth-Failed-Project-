@@ -1,6 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "name": "galactic-warfare-defense-for-planet-earth",
   "builds": [
     {
       "src": "server/server.js",
@@ -21,16 +21,7 @@
       "dest": "/server/server.js"
     },
     {
-      "src": "/public/(.*)",
-      "dest": "/public/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(auth|game|privacy|terms).html",
-      "dest": "/$1.html"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",

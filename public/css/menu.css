@@ -902,6 +902,7 @@ body.menu-page {
 }
 .extras-count strong { color: #86efac; font-size: 1.05rem; }
 .extras-count span { color: #9ca3af; font-size: 0.7rem; }
+.extras-catalog-content { min-height: 0; }
 .extras-detail {
   color: #cbd5e1;
   font-size: 0.64rem;

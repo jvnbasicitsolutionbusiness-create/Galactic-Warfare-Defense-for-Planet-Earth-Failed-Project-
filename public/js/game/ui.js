@@ -577,11 +577,16 @@ GW.UIManager = class UIManager {
     bg.lineStyle(1, 0x2d3a2d, 0.6);
     bg.lineBetween(0, TLY, W, TLY);
 
-    const LEVEL_W = 132;
-    const GROUP_GAP = 18;
-    const BAR_W = 520;
-    const TIMER_W = 104;
-    const GROUP_X = Math.floor((W - LEVEL_W - GROUP_GAP - BAR_W - GROUP_GAP - TIMER_W) / 2);
+    const SIDE_PAD = Math.min(24, Math.max(8, W * 0.025));
+    const LEVEL_W = Math.min(132, Math.max(72, W * 0.2));
+    const GROUP_GAP = Math.min(18, Math.max(6, W * 0.02));
+    const TIMER_W = Math.min(104, Math.max(64, W * 0.15));
+    const BAR_W = Math.max(
+      48,
+      Math.min(460, W - SIDE_PAD * 2 - LEVEL_W - TIMER_W - GROUP_GAP * 2)
+    );
+    const GROUP_WIDTH = LEVEL_W + GROUP_GAP + BAR_W + GROUP_GAP + TIMER_W;
+    const GROUP_X = Math.max(SIDE_PAD, Math.floor((W - GROUP_WIDTH) / 2));
     const BAR_MARGIN = GROUP_X + LEVEL_W + GROUP_GAP;
     const TIMER_X = BAR_MARGIN + BAR_W + GROUP_GAP;
 

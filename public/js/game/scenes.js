@@ -27,8 +27,17 @@ GW.BootScene = class BootScene extends Phaser.Scene {
     const status = document.getElementById('loadStatus');
     const burstPath = GW.ASSETS && GW.ASSETS.EFFECTS && GW.ASSETS.EFFECTS.deathBurst;
     if (burstPath) this.load.svg('gw-death-burst', burstPath, { width: 40, height: 40 });
-    this.load.on('progress', v => { if (fill) fill.style.width = Math.round(v * 100) + '%'; });
-    this.load.on('complete', () => { if (fill) fill.style.width = '100%'; if (status) status.textContent = 'Ready!'; });
+    this.load.on('progress', v => {
+      if (fill) fill.style.width = Math.round(v * 100) + '%';
+      const progress = document.getElementById('loadProgress');
+      if (progress) progress.setAttribute('aria-valuenow', String(Math.round(v * 100)));
+    });
+    this.load.on('complete', () => {
+      if (fill) fill.style.width = '100%';
+      const progress = document.getElementById('loadProgress');
+      if (progress) progress.setAttribute('aria-valuenow', '100');
+      if (status) status.textContent = 'Ready!';
+    });
   }
 
   create() {
@@ -84,10 +93,21 @@ GW.BootScene = class BootScene extends Phaser.Scene {
     if (fill) fill.style.width = '100%';
     const progress = document.getElementById('loadProgress');
     if (progress) progress.setAttribute('aria-valuenow', '100');
-    if (status) status.textContent = 'Battle systems ready — deploying…';
+    const transition = params.get('transition');
+    if (status) {
+      status.textContent = transition === 'next'
+        ? 'Preparing the next battlefield…'
+        : transition === 'retry'
+          ? 'Reinforcing the defense line…'
+          : 'Battle systems ready — deploying…';
+    }
     if (loadScreen) {
-      loadScreen.classList.add('fade-out');
-      window.setTimeout(() => loadScreen.classList.add('gone'), 650);
+      const minimumDisplayMs = 1800;
+      const elapsedMs = window.performance ? window.performance.now() : minimumDisplayMs;
+      window.setTimeout(() => {
+        loadScreen.classList.add('fade-out');
+        window.setTimeout(() => loadScreen.classList.add('gone'), 650);
+      }, Math.max(0, minimumDisplayMs - elapsedMs));
     }
 
     // Do not gate scene startup on an in-game timer; a paused/stalled boot
@@ -120,6 +140,7 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this._missionDurationMs = 0;
     this._pendingVictory = false;
     this._timelineProgress = 0;
+    this._timelineAlienCount = 0;
     this._timelineWaves = [];
     this._timelineFlagPositions = [];
   }
@@ -182,12 +203,26 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     // ── HUD ────────────────────────────────────────────────
     // Timeline markers track the campaign difficulty bands, with the final
     // marker reserved for the red final-wave marker.
-    const majorWaves = (levelData.waves || []).filter(wave => wave.isMajorWave || wave.isFinalWave);
+    const waves = levelData.waves || [];
+    this._timelineAlienCount = waves.reduce(
+      (total, wave) => total + GW.GameScene._getWaveAlienCount(wave),
+      0
+    );
+    const majorWaves = waves.filter((wave, index) =>
+      wave.isMajorWave || wave.isFinalWave || index === waves.length - 1
+    );
+    let cumulativeAliens = 0;
+    let nextWaveIndex = 0;
     const markerPositions = majorWaves.map((wave, index) => {
-      const targetMs = Number.isFinite(wave.startAfterMs)
-        ? wave.startAfterMs
-        : this._missionDurationMs * (index + 1) / majorWaves.length;
-      return Math.max(0, Math.min(1, targetMs / this._missionDurationMs));
+      const waveIndex = waves.indexOf(wave);
+      while (nextWaveIndex <= waveIndex) {
+        cumulativeAliens += GW.GameScene._getWaveAlienCount(waves[nextWaveIndex]);
+        nextWaveIndex++;
+      }
+      if (waveIndex === waves.length - 1) return 1;
+      return this._timelineAlienCount
+        ? Math.max(0, Math.min(1, cumulativeAliens / this._timelineAlienCount))
+        : (index + 1) / majorWaves.length;
     });
     this._timelineWaves = majorWaves;
     this._timelineFlagPositions = markerPositions;
@@ -1033,9 +1068,11 @@ GW.GameScene = class GameScene extends Phaser.Scene {
   //  CALLBACKS — Wire wave/combat events to UI
   // ══════════════════════════════════════════════════════════
   _wireCallbacks() {
-    this.waveManager.onWaveStart = index => {
-      if (this.gameMode !== 'endless') return;
-      this.uiManager.updateTimelineHead(index / Math.max(1, this.waveManager.totalWaves));
+    this.waveManager.onAlienSpawned = spawnedCount => {
+      this._timelineProgress = this._timelineAlienCount
+        ? Math.min(1, spawnedCount / this._timelineAlienCount)
+        : 1;
+      this.uiManager.updateTimelineHead(this._timelineProgress);
     };
     this.waveManager.onHordeApproach = () => {
       if (window.GWAudio) window.GWAudio.play('horde-warning');
@@ -1063,11 +1100,6 @@ GW.GameScene = class GameScene extends Phaser.Scene {
       this._triggerWin();
     };
     this.waveManager.onHordeWarning = waveDef => {
-      const flagIndex = this._timelineWaves.indexOf(waveDef);
-      if (flagIndex !== -1) {
-        this._timelineProgress = Math.max(this._timelineProgress, this._timelineFlagPositions[flagIndex]);
-        this.uiManager.updateTimelineHead(this._timelineProgress);
-      }
       this.uiManager.showBigBanner('⚠  A HUGE WAVE OF ALIEN HORDE IS APPROACHING!', waveDef.warningDelay || 5000);
     };
     this.combatManager.onEnemyKilled = en => {
@@ -1451,7 +1483,10 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this.sentinelMgr.destroyAll();
     if (this.currencyManager) this.currencyManager.destroyAll();
     // Navigate — use BootScene transition to properly init the next level
-    window.location.replace("game.html?level=" + nextLevelId);
+    window.location.replace('game.html?' + new URLSearchParams({
+      level: String(nextLevelId),
+      transition: 'next',
+    }).toString());
   }
 
   _triggerLose() {
@@ -1484,6 +1519,7 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this.sentinelMgr.destroyAll();
     if (this.currencyManager) this.currencyManager.destroyAll();
     const params = new URLSearchParams({ level: String(this.levelId) });
+    params.set('transition', 'retry');
     if (this.gameMode !== 'adventure') {
       params.set('mode', this.gameMode);
       if (this.scenarioId) params.set('scenario', this.scenarioId);
@@ -1705,11 +1741,10 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this._pendingVictory = !!snapshot.pendingVictory || this.waveManager.isComplete;
     if (this.uiManager.energyText) this.uiManager.energyText.setText(String(this.resourceManager.energy));
     this.uiManager.updateScore(this.playerState.score);
-    this._timelineProgress = Math.max(this._timelineProgress, Number(snapshot.timelineProgress) || 0);
-    this.uiManager.updateTimelineHead(Math.max(
-      this._timelineProgress,
-      Math.min(1, this._gameRuntimeMs / this._missionDurationMs)
-    ));
+    this._timelineProgress = this._timelineAlienCount
+      ? Math.min(1, this.waveManager._totalSpawnedAllWaves / this._timelineAlienCount)
+      : 0;
+    this.uiManager.updateTimelineHead(this._timelineProgress);
     this.uiManager.updateRuntime(this._gameRuntimeMs);
     return true;
   }
@@ -1739,11 +1774,6 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     if (this._runtimeStarted) {
       this._gameRuntimeMs += delta;
       this.uiManager.updateRuntime(this._gameRuntimeMs);
-      this._timelineProgress = Math.max(
-        this._timelineProgress,
-        Math.min(1, this._gameRuntimeMs / this._missionDurationMs)
-      );
-      this.uiManager.updateTimelineHead(this._timelineProgress);
     }
     this.waveManager.update(delta);
     this.combatManager.update(delta);
@@ -1768,6 +1798,15 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     if (levelId <= 23) return 3;
     if (levelId <= 35) return 4;
     return 5;
+  }
+
+  static _getWaveAlienCount(wave) {
+    const enemies = wave && Array.isArray(wave.enemies) ? wave.enemies : [];
+    if (!wave || (!wave.isHorde && !wave.hordeDelay)) return enemies.length;
+
+    const flagCount = enemies.filter(enemy => enemy.type === 'vex_flag_bearer').length;
+    const allowedFlags = wave.flagBearerCount == null ? 1 : wave.flagBearerCount;
+    return enemies.length - Math.max(0, flagCount - allowedFlags);
   }
 
   _emergencyFallback(err) {

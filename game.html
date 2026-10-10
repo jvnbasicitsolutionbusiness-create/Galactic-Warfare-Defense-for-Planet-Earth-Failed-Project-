@@ -2,165 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#1a3a0a" />
-  <meta
-    name="description"
-    content="Galactic Warfare: Defense for Planet Earth — Defend Earth against alien invasion."
-  />
-
+  <meta name="description" content="Galactic Warfare: Defense for Planet Earth — Defend Earth against alien invasion." />
   <title>Galactic Warfare: Defense for Planet Earth</title>
 
-  <!-- Runtime must load before the auth guard -->
+  <!-- Adaptive network runtime — must load before the auth guard -->
   <script src="public/js/runtime.js"></script>
 
-  <!-- Authentication guard: preserve existing logic -->
+  <!-- ── Auth Guard ──────────────────────────────────────────
+       Same logic as index.html — must run before game scripts.
+  ──────────────────────────────────────────────────────────── -->
   <script>
-    (function () {
-      var TOKEN_KEY = 'gw_session_token';
-      var TOKEN_KEY2 = 'gw_id_token';
-      var AUTH_PAGE = 'auth.html';
-
-      var token =
-        localStorage.getItem(TOKEN_KEY) ||
-        localStorage.getItem(TOKEN_KEY2);
-
-      var mode = sessionStorage.getItem('gw_mode');
-      var authorized =
-        sessionStorage.getItem('gw_entry_authorized') === '1';
-
-      if (!authorized || (mode !== 'guest' && !token)) {
-        window.location.replace(AUTH_PAGE);
-        throw new Error(
-          '[Auth Guard] No session — redirecting to ' + AUTH_PAGE
-        );
-      }
-
-      if (mode === 'guest') return;
-
-      setTimeout(function () {
-        if (!window.GWNet) return;
-
-        window.GWNet.verify(token)
-          .then(function (d) {
-            if (!d || !d.ok) {
-              localStorage.removeItem(TOKEN_KEY);
-              localStorage.removeItem(TOKEN_KEY2);
-              localStorage.removeItem('gw_user');
-
-              sessionStorage.removeItem('gw_entry_authorized');
-              sessionStorage.removeItem('gw_mode');
-
-              window.location.replace(AUTH_PAGE);
-            }
-          })
-          .catch(function () {});
-      }, 1200);
-    })();
+  (function () {
+    // Support both old token key (gw_id_token) and new (gw_session_token)
+    var TOKEN_KEY  = 'gw_session_token';
+    var TOKEN_KEY2 = 'gw_id_token';
+    var AUTH_PAGE  = 'auth.html';
+    var token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY2);
+    var mode = sessionStorage.getItem('gw_mode');
+    var authorized = sessionStorage.getItem('gw_entry_authorized') === '1';
+    if (!authorized || (mode !== 'guest' && !token)) {
+      window.location.replace(AUTH_PAGE);
+      throw new Error('[Auth Guard] No session — redirecting to ' + AUTH_PAGE);
+    }
+    if (mode === 'guest') return;
+    // Background verify — non-blocking, adapts to backend OR direct mode.
+    setTimeout(function () {
+      if (!window.GWNet) return;
+      window.GWNet.verify(token)
+        .then(function (d) {
+          if (!d || !d.ok) {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem(TOKEN_KEY2);
+            localStorage.removeItem('gw_user');
+            sessionStorage.removeItem('gw_entry_authorized');
+            sessionStorage.removeItem('gw_mode');
+            window.location.replace(AUTH_PAGE);
+          }
+        })
+        .catch(function () {});
+    }, 1200);
+  })();
   </script>
 
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="public/css/main.css" />
   <link rel="stylesheet" href="public/css/game.css" />
   <link rel="stylesheet" href="public/css/briefing.css" />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Exo+2:wght@400;600;700;800&display=swap"
-    rel="stylesheet"
-  />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
 </head>
-
 <body class="game-page">
 
-  <!-- Game battlefield -->
-  <div
-    id="game-container"
-    role="main"
-    aria-label="Game battlefield"
-  ></div>
-
-  <!-- Fullscreen button -->
-  <button
-    id="fullscreen-toggle"
-    type="button"
-    aria-label="Enter full screen"
-    title="Enter full screen"
-    hidden
-  >
+  <div id="game-container" role="main" aria-label="Game battlefield"></div>
+  <button id="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen" hidden>
     <span aria-hidden="true">⛶</span>
     <span class="sr-only">Full screen</span>
   </button>
+  <p id="fullscreen-status" class="sr-only" role="status" aria-live="polite"></p>
+  <script>
+  (function () {
+    var button = document.getElementById('fullscreen-toggle');
+    var status = document.getElementById('fullscreen-status');
+    var target = document.getElementById('game-container');
+    if (!button || !target) return;
 
-  <p
-    id="fullscreen-status"
-    class="sr-only"
-    role="status"
-    aria-live="polite"
-  ></p>
+    function isFullscreen() {
+      return document.fullscreenElement === target || document.webkitFullscreenElement === target;
+    }
+    function updateButton() {
+      var label = isFullscreen() ? 'Exit full screen' : 'Enter full screen';
+      button.setAttribute('aria-label', label);
+      button.title = label;
+    }
+    function showError(error) {
+      console.warn('[GW] Full-screen mode is unavailable:', error);
+      if (status) status.textContent = 'Full-screen mode is unavailable in this browser.';
+    }
+
+    function toggleFullscreen() {
+      var action;
+      var supported = false;
+      try {
+        if (isFullscreen()) {
+          if (document.exitFullscreen) { action = document.exitFullscreen(); supported = true; }
+          else if (document.webkitExitFullscreen) { action = document.webkitExitFullscreen(); supported = true; }
+        } else {
+          if (target.requestFullscreen) { action = target.requestFullscreen(); supported = true; }
+          else if (target.webkitRequestFullscreen) { action = target.webkitRequestFullscreen(); supported = true; }
+        }
+      } catch (error) {
+        showError(error);
+        return;
+      }
+      if (!supported) {
+        showError(new Error('Fullscreen API is not supported.'));
+      } else if (action && typeof action.then === 'function') {
+        action.then(updateButton).catch(showError);
+      } else {
+        window.setTimeout(updateButton, 0);
+      }
+    }
+    window.GWFullscreen = { toggle: toggleFullscreen };
+    button.addEventListener('click', toggleFullscreen);
+    window.addEventListener('gw:pause-open', function () { button.hidden = false; });
+    window.addEventListener('gw:pause-close', function () { button.hidden = true; });
+    document.addEventListener('keydown', function (event) {
+      var targetTag = event.target && event.target.tagName;
+      if (event.key.toLowerCase() !== 'f' || event.altKey || event.ctrlKey || event.metaKey ||
+          ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(targetTag) !== -1) return;
+      event.preventDefault();
+      toggleFullscreen();
+    });
+    document.addEventListener('fullscreenchange', updateButton);
+    document.addEventListener('webkitfullscreenchange', updateButton);
+  })();
+  </script>
 
   <!-- Loading screen -->
   <div id="load-screen" aria-live="polite">
     <div class="load-inner">
-      <h2 class="load-title">
-        GALACTIC WARFARE: DEFENSE FOR PLANET EARTH
-      </h2>
-
-      <div
-        class="load-bar-wrap"
-        id="loadProgress"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-      >
-        <div
-          class="load-bar-fill"
-          id="loadBarFill"
-        ></div>
+      <h2 class="load-title">GALACTIC WARFARE: DEFENSE FOR PLANET EARTH</h2>
+      <div class="load-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="loadProgress">
+        <div class="load-bar-fill" id="loadBarFill"></div>
       </div>
-
-      <p class="load-status" id="loadStatus">
-        Initializing…
-      </p>
-
-      <button
-        class="loading-audio-toggle"
-        type="button"
-        data-audio-toggle
-        aria-pressed="false"
-      >
-        ENABLE SOUND
-      </button>
+      <p class="load-status" id="loadStatus">Initializing…</p>
+      <button class="loading-audio-toggle" type="button" data-audio-toggle aria-pressed="false">ENABLE SOUND</button>
     </div>
   </div>
 
-  <!-- Third-party libraries -->
+  <!-- Firebase SDK (compat mode) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <!-- Phaser 3 -->
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 
-  <!-- Audio -->
   <script src="public/js/audio.js"></script>
-  <script>
-    if (window.GWAudio) {
-      window.GWAudio.setScene('loading');
-    }
-  </script>
+  <script>window.GWAudio.setScene('loading');</script>
 
-  <!-- Configuration -->
+  <!-- Config (first — defines GW namespace) -->
   <script src="public/js/config.js"></script>
 
-  <!-- Game systems -->
+  <!-- New systems (load before progression) -->
   <script src="public/js/game/firebase.js"></script>
   <script src="public/js/game/sheets-client.js"></script>
   <script src="public/js/game/progression.js"></script>
@@ -169,7 +154,7 @@
   <script src="public/js/game/sprites.js"></script>
   <script src="public/js/game/briefing.js"></script>
 
-  <!-- Core game subsystems -->
+  <!-- Core game subsystems (dependency order) -->
   <script src="public/js/game/levels.js"></script>
   <script src="public/js/game/characters.js"></script>
   <script src="public/js/game/enemies.js"></script>
@@ -184,112 +169,6 @@
   <script src="public/js/game/ui.js"></script>
   <script src="public/js/game/scenes.js"></script>
   <script src="public/js/game/game.js"></script>
-
-  <!-- Fullscreen controls -->
-  <script>
-    (function () {
-      var button = document.getElementById('fullscreen-toggle');
-      var status = document.getElementById('fullscreen-status');
-      var target = document.getElementById('game-container');
-
-      if (!button || !target) return;
-
-      function isFullscreen() {
-        return document.fullscreenElement === target ||
-          document.webkitFullscreenElement === target;
-      }
-
-      function updateButton() {
-        var label = isFullscreen()
-          ? 'Exit full screen'
-          : 'Enter full screen';
-
-        button.setAttribute('aria-label', label);
-        button.title = label;
-      }
-
-      function showError(error) {
-        console.warn('[GW] Full-screen mode is unavailable:', error);
-
-        if (status) {
-          status.textContent =
-            'Full-screen mode is unavailable in this browser.';
-        }
-      }
-
-      function toggleFullscreen() {
-        var action;
-        var supported = false;
-
-        try {
-          if (isFullscreen()) {
-            if (document.exitFullscreen) {
-              action = document.exitFullscreen();
-              supported = true;
-            } else if (document.webkitExitFullscreen) {
-              action = document.webkitExitFullscreen();
-              supported = true;
-            }
-          } else {
-            if (target.requestFullscreen) {
-              action = target.requestFullscreen();
-              supported = true;
-            } else if (target.webkitRequestFullscreen) {
-              action = target.webkitRequestFullscreen();
-              supported = true;
-            }
-          }
-        } catch (error) {
-          showError(error);
-          return;
-        }
-
-        if (!supported) {
-          showError(new Error('Fullscreen API is not supported.'));
-        } else if (action && typeof action.then === 'function') {
-          action.then(updateButton).catch(showError);
-        } else {
-          window.setTimeout(updateButton, 0);
-        }
-      }
-
-      window.GWFullscreen = {
-        toggle: toggleFullscreen
-      };
-
-      button.addEventListener('click', toggleFullscreen);
-
-      window.addEventListener('gw:pause-open', function () {
-        button.hidden = false;
-      });
-
-      window.addEventListener('gw:pause-close', function () {
-        button.hidden = true;
-      });
-
-      document.addEventListener('keydown', function (event) {
-        var targetTag = event.target && event.target.tagName;
-
-        if (
-          event.key.toLowerCase() !== 'f' ||
-          event.altKey ||
-          event.ctrlKey ||
-          event.metaKey ||
-          ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(targetTag) !== -1
-        ) {
-          return;
-        }
-
-        event.preventDefault();
-        toggleFullscreen();
-      });
-
-      document.addEventListener('fullscreenchange', updateButton);
-      document.addEventListener('webkitfullscreenchange', updateButton);
-    })();
-  </script>
-
-  <!-- Main entry point -->
   <script src="public/js/main.js"></script>
 
 </body>

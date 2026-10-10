@@ -158,6 +158,26 @@
     window.__GW_GAME__ = game;
     window.__GW_ALLOW_NAVIGATION__ = false;
 
+    const rotatedMobileViewport = window.matchMedia(
+      '(orientation: portrait) and (pointer: coarse)'
+    );
+    function syncRotatedMobileScale() {
+      if (!rotatedMobileViewport.matches) {
+        return;
+      }
+      if (!game.scale.parent || !game.scale.canvas) {
+        window.requestAnimationFrame(syncRotatedMobileScale);
+        return;
+      }
+      game.scale.parentSize.setSize(
+        game.scale.parent.clientWidth,
+        game.scale.parent.clientHeight
+      );
+      game.scale.refresh();
+    }
+    window.addEventListener('resize', syncRotatedMobileScale);
+    window.requestAnimationFrame(syncRotatedMobileScale);
+
     const gameUrl = window.location.href;
 
     // Preserve the existing browser navigation guard.

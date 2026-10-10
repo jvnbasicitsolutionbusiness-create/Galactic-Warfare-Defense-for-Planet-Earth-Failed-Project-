@@ -22,7 +22,7 @@ GW.DISPLAY = {
   BASE_WIDTH:   960,
   BASE_HEIGHT:  600,   // taller canvas for proper sky proportions
   MIN_WIDTH:    320,
-  MIN_HEIGHT:   320,
+  MIN_HEIGHT:   200,
   BACKGROUND_COLOR: '#0a1a08',   // Dark military green â€” visible fallback if scene fails
   PIXEL_ART:    true,
 };

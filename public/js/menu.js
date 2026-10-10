@@ -144,6 +144,7 @@
     g('btnProfiles').addEventListener('click',  () => _tryOpen('characters_profile', 'profilesOverlay'));
     g('btnExtras').addEventListener('click',    () => {
       _buildExtrasCatalog();
+      _setExtrasCategory('military');
       _tryOpen('extras', 'extrasOverlay');
     });
 
@@ -175,6 +176,8 @@
     g('btnNotifyClose').addEventListener('click',  () => hide('notifyOverlay'));
     g('btnCSClose').addEventListener('click',      () => hide('comingSoonOverlay'));
     g('btnEndless').addEventListener('click',      () => _launchGameMode('endless', 'endless', 'survival'));
+    g('extrasTabMilitary').addEventListener('click', () => _setExtrasCategory('military'));
+    g('extrasTabAliens').addEventListener('click', () => _setExtrasCategory('aliens'));
 
     // Profile tabs
     g('tabMilitary').addEventListener('click', () => {
@@ -231,6 +234,23 @@
       const el = OV[id];
       if (el) el.addEventListener('click', e => { if (e.target === el) hide(id); });
     });
+  }
+
+  function _setExtrasCategory(category) {
+    const militarySelected = category === 'military';
+    const militaryTab = g('extrasTabMilitary');
+    const aliensTab = g('extrasTabAliens');
+    const militaryPanel = g('extrasPanelMilitary');
+    const aliensPanel = g('extrasPanelAliens');
+
+    militaryTab.classList.toggle('char-tab--active', militarySelected);
+    aliensTab.classList.toggle('char-tab--active', !militarySelected);
+    militaryTab.setAttribute('aria-selected', String(militarySelected));
+    aliensTab.setAttribute('aria-selected', String(!militarySelected));
+    militaryTab.tabIndex = militarySelected ? 0 : -1;
+    aliensTab.tabIndex = militarySelected ? -1 : 0;
+    militaryPanel.hidden = !militarySelected;
+    aliensPanel.hidden = militarySelected;
   }
 
   // ── Player greeting ───────────────────────────────────────

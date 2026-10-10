@@ -28,15 +28,16 @@
  *   5. If Apps Script is unreachable → HTTP 503 (no ghost tokens)
  */
 
-'use strict';
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import authRouter from './auth.js';
 
-require('dotenv').config();
-
-const express    = require('express');
-const cors       = require('cors');
-const helmet     = require('helmet');
-const path       = require('path');
-const authRouter = require('./auth');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app      = express();
 const PORT     = process.env.PORT     || 3000;
@@ -208,7 +209,7 @@ app.use((err, req, res, _next) => {
 // ─── Start (local dev / Railway / Fly.io / Render) ────────────────────────────
 // Vercel's serverless adapter calls the exported app directly; it never
 // reaches app.listen(), so this block is harmless in that environment.
-if (require.main === module) {
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
   app.listen(PORT, () => {
     console.log('╔══════════════════════════════════════════════════════╗');
     console.log('║  Galactic Warfare: Defense for Planet Earth          ║');
@@ -220,4 +221,4 @@ if (require.main === module) {
 }
 
 // Export for Vercel serverless and test suites
-module.exports = app;
+export default app;

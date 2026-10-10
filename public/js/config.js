@@ -569,14 +569,14 @@ GW.CARDS = {
     id: 'fire_lancer', name: 'Fire-Lancer',
     era: 'early_10c', role: 'offense', cardSlot: 'start_2',
     hp: 100, weapon: 'fire_lance', damage: 20, attackSpeed: 2200, range: 900,
-    cost: 50, unlockLevel: 'start', isBossReward: false,
+    cost: 100, unlockLevel: 'start', isBossReward: false,
     rarity: 'common',
     // v1.0.1 NERF: deploy cooldown 10s (was 7.5s)
     deployCooldown: 10000,
     color: 0x7c3d0a, accentColor: 0xff6b00,
     helmetColor: 0x3d1a00, skinColor: 0xd4956a,
     isSupport: false,
-    description: '10th-century Chinese fire-lance soldier. 20 damage per shot. Costs 50 Plasma.',
+    description: '10th-century Chinese fire-lance soldier. 20 damage per shot. Costs 100 Plasma.',
     environment: 'daytime',
     strengthsText: 'Low cost. Long range. First ranged attacker.',
     weaknessesText: 'Needs support to handle a large horde alone.',
@@ -584,7 +584,7 @@ GW.CARDS = {
 
   // â•â•â• LEVEL 1 REWARD â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   bomber: {
-    id: 'bomber', name: 'Bombman',
+    id: 'bomber', name: 'Bomb Man',
     era: 'early', role: 'offense', cardSlot: 'adv_1',
     hp: 70, weapon: null, damage: 500, attackSpeed: 0, range: 260, laneRadius: 1,
     cost: 120, unlockLevel: 1, isBossReward: false,
@@ -595,7 +595,7 @@ GW.CARDS = {
     isSupport: false,
     isSuicideUnit: true,
     fuseDuration: 2500,
-    description: 'Plants a warning charge that explodes after 2.5 seconds for 500 damage across three lanes.',
+    description: 'A timed demolition unit that deals heavy area damage. Costs 120 Plasma.',
     environment: 'daytime',
     strengthsText: 'High burst AoE. Clears clustered aliens.',
     weaknessesText: 'Destroys itself on use. Long cooldown.',
@@ -1251,32 +1251,18 @@ GW.CARD_ABILITY_RULES = {
 
 (function applyCardBalanceTiers() {
   const tiers = [
-    { maxLevel: 3, rarity: 'common', hp: [50, 75] },
-    { maxLevel: 10, rarity: 'uncommon', hp: [100, 150] },
-    { maxLevel: 20, rarity: 'rare', hp: [120, 175] },
-    { maxLevel: 30, rarity: 'very_rare', hp: [200, 220] },
-    { maxLevel: 38, rarity: 'ultra_rare', hp: [250, 275] },
-    { maxLevel: 48, rarity: 'legendary', hp: [300, 500] },
-    { maxLevel: Infinity, rarity: 'mythical', hp: [500, 1000] },
+    { maxLevel: 3, rarity: 'common' },
+    { maxLevel: 10, rarity: 'uncommon' },
+    { maxLevel: 20, rarity: 'rare' },
+    { maxLevel: 30, rarity: 'very_rare' },
+    { maxLevel: 38, rarity: 'ultra_rare' },
+    { maxLevel: 48, rarity: 'legendary' },
+    { maxLevel: Infinity, rarity: 'mythical' },
   ];
   Object.values(GW.CARDS).forEach(card => {
     const level = typeof card.unlockLevel === 'number' ? card.unlockLevel : 0;
     const tier = tiers.find(entry => level <= entry.maxLevel);
     card.rarity = tier.rarity;
-    const [minHp, maxHp] = tier.hp;
-    if (card.id === 'fire_lancer') {
-      // Preserve a durable, affordable starting attacker through tier normalization.
-      card.hp = 100;
-    } else if (card.hp < minHp || card.hp > maxHp) {
-      card.hp = minHp + ((Math.imul(level + card.id.length, 37) >>> 0) % (maxHp - minHp + 1));
-    }
-    if (tier.rarity === 'common')     card.cost = ['plasma_energy_generator', 'fire_lancer'].includes(card.id) ? 50 : 100;
-    else if (tier.rarity === 'uncommon') card.cost = 120;
-    else if (tier.rarity === 'rare') card.cost = 150 + (level % 6) * 10;
-    else if (tier.rarity === 'very_rare') card.cost = 250;
-    else if (tier.rarity === 'ultra_rare') card.cost = 300 + (level % 5) * 50;
-    else if (tier.rarity === 'legendary') card.cost = 500 + (level % 6) * 100;
-    else card.cost = 1000 + (level % 5) * 500;
 
     const weapon = card.weapon && GW.WEAPONS[card.weapon];
     if (weapon && card.weapon === 'rifle') {

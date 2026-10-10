@@ -13,8 +13,12 @@ Defend your garden from waves of original enemies by placing plant defenders in 
 
 ## Installation
 
+Install Node.js 20.19 or newer first; npm is included with Node.js.
+
   npm install
   copy .env.example .env
+
+`npm install` installs the declared dependencies, including Express. Node.js is a runtime, not an npm dependency, and this project uses Google Sheets rather than MySQL; do not install `node` or `mysql2` with npm.
 
 ## npm Commands
 
@@ -64,7 +68,7 @@ Defend your garden from waves of original enemies by placing plant defenders in 
 
 - Main menu: PLAY, CHARACTERS, PROFILE, EXTRAS, SETTINGS, CREDITS
 - 5-lane game board with home wall and enemy spawn side
-- Solar Sprout: original character, auto-attack, costs 50 energy
+- Fire-Lancer: ranged attacker, costs 100 P.E.
 - Grove Crawler: moves left, attacks blockers, dies, gives reward
 - Projectile combat: solar seed fires, travels, hits, deals damage
 - 3-wave progression with banners and between-wave countdown
@@ -77,16 +81,16 @@ Defend your garden from waves of original enemies by placing plant defenders in 
 ## How to Play
 
 1. Click PLAY on the main menu
-2. Wait 3 seconds for Wave 1 to begin
-3. Click the Solar Sprout card in the bottom tray (costs 50 energy)
-4. Click any lane cell to place the defender
-5. Solar Sprout auto-attacks enemies that enter its range
-6. Survive all 3 waves to win
-7. If any enemy reaches the home side (left), you lose
+2. Review the recon and mission briefing, then click DEPLOY when you're ready
+3. Use the preparation countdown to deploy the Plasma Energy Generator (50 P.E.) and collect its generated energy and field orbs.
+4. Save 100 P.E. and deploy the Fire-Lancer to attack aliens in its lane.
+5. Click any lane cell to place the selected defender.
+6. Survive all waves to win.
+7. If any enemy reaches the home side (left), you lose.
 
 ## Campaign Combat Balance
 
-The campaign starts with 50 P.E. and a Fire-Lancer that costs 50 P.E., has 100 HP, and deals 20 damage every 2.2 seconds. Alien health is normalized by class after enemy definitions load, so brute and boss balance values must be kept consistent with that normalization pass; the current Beacon Brute has 1,200 HP and the Level 50 Rift Matriarch has 50,000 HP.
+The campaign starts with 50 P.E. The Plasma Energy Generator costs 50 P.E.; the Fire-Lancer costs 100 P.E., has 100 HP, and deals 20 damage every 2.2 seconds. The level 1 Bomb Man reward costs 120 P.E. Card health, damage, role, and deployment costs remain unit-specific rather than scaling mechanically with unlock level. Alien health is normalized by class after enemy definitions load, so brute and boss balance values must be kept consistent with that normalization pass; the current Beacon Brute has 1,200 HP and the Level 50 Rift Matriarch has 50,000 HP.
 
 Common scouts move at the 12 px/s baseline (1.0×); other alien archetypes retain their configured speeds, and bicycle equipment doubles its wearer's base speed. Save & Quit checkpoints the active level, deployed units, resources, wave state, and elapsed run time for registered accounts and guest sessions. Guest checkpoints are stored locally and cleared when the guest logs out. Restart Level clears the active checkpoint and starts the selected level from its initial state.
 
@@ -122,6 +126,6 @@ Campaign levels use the midpoint of each requested time range as their target co
 | Expert | 26–39 seconds | 5–10, 8–12, 12–15, 15–20, then 20–30 seconds | 52 minutes 30 seconds (45–60 minute range) |
 | Impossible | 34–36 seconds | 34–36 seconds | 30-minute assault, followed by a 5-minute boss phase |
 
-The Plasma Energy Generator produces 25 P.E. every 8–12 seconds. A 25 P.E. field orb appears every 12–15 seconds.
+The Plasma Energy Generator costs 50 P.E. and produces 25 P.E. every 8–12 seconds. The starting Fire-Lancer costs 100 P.E.; the level 1 Bomb Man reward costs 120 P.E. Card health, damage, role, and deployment cost are defined per unit rather than increased automatically with unlock level. A 25 P.E. field orb appears every 12–15 seconds.
 
 Each alien can drop at most one currency item, with 70% of kills dropping nothing: silver 15%, gold 8%, emerald 4%, diamond 2%, or a wealth bag 1%. These are all below the requested maximum odds.

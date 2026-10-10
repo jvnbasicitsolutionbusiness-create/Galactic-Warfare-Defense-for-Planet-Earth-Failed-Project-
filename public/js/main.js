@@ -238,11 +238,3 @@
     }
   }
 })();
-One more fix is essential
-The code above alone cannot guarantee the modal stays hidden if your CSS overrides the HTML hidden attribute. In public/css/logout-modal.css, make sure this rule exists at the bottom:
-
-css
-
-#gw-logout-modal[hidden] {
-  display: none !important;
-}

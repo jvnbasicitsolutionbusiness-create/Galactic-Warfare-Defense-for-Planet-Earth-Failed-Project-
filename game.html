@@ -138,6 +138,11 @@
 
   <!-- Phaser 3 -->
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script>
+    if (!window.Phaser) {
+      document.write('<script src="https://unpkg.com/phaser@3.80.1/dist/phaser.min.js" onerror="document.getElementById(\'loadStatus\').textContent=\'ERROR: The game engine could not load. Check your connection and reload.\'"><\/script>');
+    }
+  </script>
 
   <script src="public/js/audio.js"></script>
   <script>window.GWAudio.setScene('loading');</script>

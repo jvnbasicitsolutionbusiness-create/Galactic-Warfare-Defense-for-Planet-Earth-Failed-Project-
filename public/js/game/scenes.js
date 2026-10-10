@@ -35,52 +35,64 @@ GW.BootScene = class BootScene extends Phaser.Scene {
     // ── Bootstrap game systems SYNCHRONOUSLY first ─────────
     if (!GW.progression) GW.progression = new GW.ProgressionManager();
     if (!GW.cardManager) GW.cardManager  = new GW.CardManager(GW.progression);
-    if (window.GWGraphics) window.GWGraphics.apply();
+    if (window.GWGraphics) {
+      try {
+        window.GWGraphics.apply();
+      } catch (error) {
+        console.error('[GW] Could not apply saved graphics settings; using browser defaults.', error);
+      }
+    }
 
     // Firebase init: fire-and-forget, do not block scene transition
-    if (GW.firebaseClient) GW.firebaseClient.init().catch(() => {});
-
-    // ── Staged loading messages via Phaser-native timers ────
-    // Uses only this.time.delayedCall — guaranteed to work in Phaser 3
-    const fill   = document.getElementById('loadBarFill');
-    const status = document.getElementById('loadStatus');
-    const params = new URLSearchParams(window.location.search);
-    const levelId = parseInt(params.get('level') || '1', 10);
-
-    const stages = [
-      { pct: 10, msg: 'Connecting to command…',       t: 200  },
-      { pct: 28, msg: 'Loading level data…',          t: 500  },
-      { pct: 48, msg: 'Initializing battle systems…', t: 900  },
-      { pct: 66, msg: 'Deploying sentinels…',         t: 1300 },
-      { pct: 82, msg: 'Scanning alien signatures…',   t: 1700 },
-      { pct: 95, msg: 'Stand by for deployment…',     t: 2200 },
-      { pct:100, msg: 'Mission begins…',              t: 2600 },
-    ];
-
-    stages.forEach(st => {
-      this.time.delayedCall(st.t, () => {
-        if (status) status.textContent = st.msg;
-        if (fill)   fill.style.width   = st.pct + '%';
+    if (GW.firebaseClient) {
+      GW.firebaseClient.init().catch(error => {
+        console.warn('[GW] Optional cloud services did not initialize.', error);
       });
-    });
+    }
 
-    // Hide load screen and start GameScene after all stages
-    const TOTAL = 3100;
-    this.time.delayedCall(TOTAL, () => {
-      const loadScreen = document.getElementById('load-screen');
-      if (loadScreen) {
-        loadScreen.classList.add('fade-out');
-        // Remove from DOM after CSS transition (0.6s)
-        window.setTimeout(() => {
-          loadScreen.classList.add('gone');
-        }, 650);
-      }
-    });
+    const params = new URLSearchParams(window.location.search);
+    const requestedLevel = Number(params.get('level') || 1);
+    const levelId = Number.isInteger(requestedLevel) && GW.LEVELS[requestedLevel]
+      ? requestedLevel
+      : 1;
+    const mode = params.get('mode') || 'adventure';
+    const scenarioId = params.get('scenario') || '';
+    const modeGate = {
+      survival: 'survival',
+      endless: 'survival',
+      minigame: 'minigames',
+      puzzle: 'puzzle',
+    }[mode];
 
-    // Start gameplay scene slightly after load screen begins fading
-    this.time.delayedCall(TOTAL + 400, () => {
-      this.scene.start(GW.SCENES.GAME, { levelId });
-    });
+    if (mode !== 'adventure' && !modeGate) {
+      const status = document.getElementById('loadStatus');
+      if (status) status.textContent = 'Unknown game mode. Returning to the command menu…';
+      console.error('[GW] Unknown game mode requested:', mode);
+      window.setTimeout(() => window.location.replace('index.html'), 900);
+      return;
+    }
+    if (modeGate && !GW.progression.isModeUnlocked(modeGate)) {
+      const status = document.getElementById('loadStatus');
+      if (status) status.textContent = 'This mode is locked. Returning to the command menu…';
+      window.setTimeout(() => window.location.replace('index.html'), 900);
+      return;
+    }
+
+    const loadScreen = document.getElementById('load-screen');
+    const fill = document.getElementById('loadBarFill');
+    const status = document.getElementById('loadStatus');
+    if (fill) fill.style.width = '100%';
+    const progress = document.getElementById('loadProgress');
+    if (progress) progress.setAttribute('aria-valuenow', '100');
+    if (status) status.textContent = 'Battle systems ready — deploying…';
+    if (loadScreen) {
+      loadScreen.classList.add('fade-out');
+      window.setTimeout(() => loadScreen.classList.add('gone'), 650);
+    }
+
+    // Do not gate scene startup on an in-game timer; a paused/stalled boot
+    // clock must never leave the DOM loading overlay covering the battlefield.
+    this.scene.start(GW.SCENES.GAME, { levelId, mode, scenarioId });
   }
 };
 
@@ -92,6 +104,10 @@ GW.GameScene = class GameScene extends Phaser.Scene {
 
   init(data) {
     this.levelId         = (data && data.levelId) ? data.levelId : 1;
+    this.gameMode        = (data && data.mode) || 'adventure';
+    this.scenarioId      = (data && data.scenarioId) || '';
+    this._endlessRound   = 0;
+    this._endlessCompletedWaves = 0;
     if (window.GW && GW.progression && GW.progression.isGuest && this.levelId > 10) this.levelId = 10;
     this._gameOver       = false;
     this._gameWon        = false;
@@ -113,7 +129,10 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     const W = GW.DISPLAY.BASE_WIDTH;   // 960
     const H = GW.DISPLAY.BASE_HEIGHT;  // 600
 
-    const levelData = GW.LEVELS[this.levelId] || GW.LEVELS[1];
+    const campaignLevel = GW.LEVELS[this.levelId] || GW.LEVELS[1];
+    const modeData = this._resolveModeData(campaignLevel);
+    const levelData = modeData.level;
+    this._modeName = modeData.name;
     const envId     = levelData.environment || 'daytime';
     this._missionDurationMs = levelData.durationMs ||
       (GW.DIFFICULTY_PACING[levelData.difficulty] && GW.DIFFICULTY_PACING[levelData.difficulty].durationMs) ||
@@ -214,6 +233,64 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     }
   }
 
+  _resolveModeData(campaignLevel) {
+    if (this.gameMode === 'adventure') {
+      return { level: campaignLevel, name: campaignLevel.name };
+    }
+
+    const modeGate = {
+      survival: 'survival',
+      endless: 'survival',
+      minigame: 'minigames',
+      puzzle: 'puzzle',
+    }[this.gameMode];
+    if (!modeGate || !GW.progression || !GW.progression.isModeUnlocked(modeGate)) {
+      throw new Error('This game mode is unavailable for the current account.');
+    }
+
+    let name;
+    let environment = 'daytime';
+    let waves;
+    if (this.gameMode === 'endless') {
+      name = GW.ENDLESS.name;
+      waves = GW.ENDLESS_BASE_WAVES;
+    } else if (this.gameMode === 'survival') {
+      const scenario = GW.SURVIVAL_MODES.find(mode => mode.id === this.scenarioId);
+      if (!scenario || !GW.SURVIVAL_WAVE_SETS[scenario.id]) {
+        throw new Error('The selected survival scenario is unavailable.');
+      }
+      name = scenario.name + ' Survival';
+      environment = scenario.env;
+      waves = GW.SURVIVAL_WAVE_SETS[scenario.id];
+    } else if (this.gameMode === 'minigame') {
+      const scenario = GW.MINIGAMES.find(mode => mode.id === this.scenarioId);
+      if (!scenario || !GW.MINIGAME_WAVE_SETS[scenario.id]) {
+        throw new Error('The selected mini-game is unavailable.');
+      }
+      name = scenario.name;
+      waves = GW.MINIGAME_WAVE_SETS[scenario.id];
+    } else {
+      const scenario = GW.PUZZLES.find(puzzle => puzzle.id === this.scenarioId);
+      if (!scenario || !GW.PUZZLE_WAVE_SETS[scenario.id]) {
+        throw new Error('The selected puzzle is unavailable.');
+      }
+      name = scenario.name;
+      waves = GW.PUZZLE_WAVE_SETS[scenario.id];
+    }
+
+    if (!GW.ENVIRONMENTS[environment]) environment = 'daytime';
+    return {
+      name,
+      level: Object.assign({}, campaignLevel, {
+        name,
+        environment,
+        waves,
+        durationMs: 5 * 60 * 1000,
+        availableDefenders: GW.LOADOUT.DEFAULT_CARDS,
+      }),
+    };
+  }
+
   // ══════════════════════════════════════════════════════════
   //  CAMERA RECON — Cinematic sweep overlay (non-blocking, ~3s total)
   //  Phase 1 (0–600ms):   Reveal right side (alien zone), alien labels
@@ -228,6 +305,10 @@ GW.GameScene = class GameScene extends Phaser.Scene {
    * With intro: banner fires after ~3.2s. Without intro: fires after 200ms.
    */
   _playRecon(W, H, envId, levelId) {
+    if (this.gameMode !== 'adventure') {
+      this._onDeployClicked();
+      return;
+    }
     // Req 1+4: intro only for daytime levels 1 through 5
     const showIntro = (envId === 'daytime') && (levelId >= 1) && (levelId <= 5);
 
@@ -381,7 +462,8 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     // Let the banner fade completely, then start the full 20-second prep clock.
     this.time.delayedCall(3000, () => {
       if (this._gameOver || this._gameWon) return;
-      this.waveManager.start();
+      if (this.gameMode === 'endless') this._prepareEndlessRound();
+      else this.waveManager.start();
     });
   }
 
@@ -951,13 +1033,31 @@ GW.GameScene = class GameScene extends Phaser.Scene {
   //  CALLBACKS — Wire wave/combat events to UI
   // ══════════════════════════════════════════════════════════
   _wireCallbacks() {
-    this.waveManager.onWaveStart = () => {};
+    this.waveManager.onWaveStart = index => {
+      if (this.gameMode !== 'endless') return;
+      this.uiManager.updateTimelineHead(index / Math.max(1, this.waveManager.totalWaves));
+    };
     this.waveManager.onHordeApproach = () => {
       if (window.GWAudio) window.GWAudio.play('horde-warning');
     };
 
     this.waveManager.onCountdown = () => {};
     this.waveManager.onAllClear  = () => {
+      if (this.gameMode === 'endless') {
+        this._endlessCompletedWaves += this.waveManager.totalWaves;
+        if (GW.progression) {
+          GW.progression.updateEndlessHighScore(this._endlessCompletedWaves, this.playerState.score);
+        }
+        this.uiManager.showBanner(
+          'ROUND ' + this._endlessRound + ' CLEARED — INCOMING ASSAULT',
+          GW.UI_COLORS.GREEN_BRIGHT,
+          2200
+        );
+        this.time.delayedCall(2400, () => {
+          if (!this._gameOver && !this._gameWon) this._prepareEndlessRound();
+        });
+        return;
+      }
       this._timelineProgress = 1;
       this.uiManager.updateTimelineHead(1);
       this._triggerWin();
@@ -986,6 +1086,29 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this.combatManager.onCharacterKilled = () => {
       if (window.GWAudio) window.GWAudio.play('defender-death');
     };
+  }
+
+  _prepareEndlessRound() {
+    const baseWaves = GW.ENDLESS_BASE_WAVES;
+    const scale = GW.ENDLESS.difficultyScale;
+    const enemyHpMultiplier = 1 + this._endlessCompletedWaves * scale.hpMultiplierPerWave;
+    const enemySpeedMultiplier = Math.min(
+      2.5,
+      1 + this._endlessCompletedWaves * scale.speedMultiplierPerWave
+    );
+    const waves = baseWaves.map(wave => Object.assign({}, wave, {
+      enemies: (wave.enemies || []).map(enemy => Object.assign({}, enemy)),
+      enemyHpMultiplier,
+      enemySpeedMultiplier,
+    }));
+
+    this._endlessRound++;
+    this.waveManager.waves = waves;
+    this.waveManager.totalWaves = waves.length;
+    this.waveManager.currentWaveIndex = -1;
+    this.waveManager.initialTimer = GW.WAVES.INITIAL_DELAY;
+    this.waveManager.started = false;
+    this.waveManager.start();
   }
 
   // ══════════════════════════════════════════════════════════
@@ -1125,6 +1248,26 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this._clearBattleSnapshot();
     this._gameWon = true;
     this.resourceManager.stopOrbSpawning();
+
+    if (this.gameMode !== 'adventure') {
+      if (this.gameMode === 'survival' && GW.progression) {
+        GW.progression.updateSurvivalScore(
+          this.scenarioId,
+          this.waveManager.totalWaves,
+          this.playerState.score
+        );
+      }
+      this.uiManager.showWinScreen(
+        this.playerState,
+        this.levelId,
+        null,
+        () => this._restart(),
+        () => this._goToMenu(),
+        null,
+        this._modeName
+      );
+      return;
+    }
 
     // 1. Mark level complete and unlock the next level in progression
     if (GW.progression) GW.progression.completeLevel(this.levelId);
@@ -1317,6 +1460,16 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this._pendingVictory = false;
     this._gameOver = true;
     this.resourceManager.stopOrbSpawning();
+    if (GW.progression && this.gameMode === 'endless') {
+      const reachedWave = this._endlessCompletedWaves + Math.max(0, this.waveManager.currentWaveIndex + 1);
+      GW.progression.updateEndlessHighScore(reachedWave, this.playerState.score);
+    } else if (GW.progression && this.gameMode === 'survival') {
+      GW.progression.updateSurvivalScore(
+        this.scenarioId,
+        this.waveManager.currentWaveNumber,
+        this.playerState.score
+      );
+    }
     this.cameras.main.shake(380, 0.012);
     this.uiManager.showBanner('BASE BREACHED!', GW.UI_COLORS.TEXT_DANGER, 900);
     this.time.delayedCall(1000, () => {
@@ -1330,7 +1483,13 @@ GW.GameScene = class GameScene extends Phaser.Scene {
     this.combatManager.destroyAll();
     this.sentinelMgr.destroyAll();
     if (this.currencyManager) this.currencyManager.destroyAll();
-    window.location.replace('game.html?level=' + this.levelId + '&restart=' + Date.now());
+    const params = new URLSearchParams({ level: String(this.levelId) });
+    if (this.gameMode !== 'adventure') {
+      params.set('mode', this.gameMode);
+      if (this.scenarioId) params.set('scenario', this.scenarioId);
+    }
+    params.set('restart', String(Date.now()));
+    window.location.replace('game.html?' + params.toString());
   }
 
   async _goToMenu() {
@@ -1352,6 +1511,8 @@ GW.GameScene = class GameScene extends Phaser.Scene {
 
     const snapshot = {
       levelId: this.levelId,
+      mode: this.gameMode,
+      scenarioId: this.scenarioId,
       gameRuntimeMs: this._gameRuntimeMs,
       runtimeStarted: this._runtimeStarted,
       energy: this.resourceManager.energy,
@@ -1455,7 +1616,9 @@ GW.GameScene = class GameScene extends Phaser.Scene {
   _restoreBattleSnapshot() {
     const progression = GW.progression;
     const snapshot = progression && progression.state.activeBattle;
-    if (!snapshot || snapshot.levelId !== this.levelId) return false;
+    if (!snapshot || snapshot.levelId !== this.levelId ||
+        (snapshot.mode || 'adventure') !== this.gameMode ||
+        (snapshot.scenarioId || '') !== this.scenarioId) return false;
 
     this.resourceManager.energy = snapshot.energy;
     this._gameRuntimeMs = Math.max(0, Number(snapshot.gameRuntimeMs) || 0);

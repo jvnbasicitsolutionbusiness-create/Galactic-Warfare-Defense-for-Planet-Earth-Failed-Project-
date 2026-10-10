@@ -120,6 +120,18 @@
     }
   }
 
+  function _launchGameMode(mode, scenarioId, progressionMode) {
+    const prog = window.GW && window.GW.progression;
+    if (!prog || !prog.isModeUnlocked(progressionMode)) {
+      _showLocked(progressionMode);
+      return;
+    }
+    const params = new URLSearchParams({ mode });
+    if (scenarioId) params.set('scenario', scenarioId);
+    sessionStorage.setItem('gw_menu_return', '1');
+    window.location.href = 'game.html?' + params.toString();
+  }
+
   // ── Button bindings ───────────────────────────────────────
   function _bindButtons() {
     // Adventure — always unlocked
@@ -162,7 +174,7 @@
     g('btnLockedClose').addEventListener('click',  () => hide('lockedOverlay'));
     g('btnNotifyClose').addEventListener('click',  () => hide('notifyOverlay'));
     g('btnCSClose').addEventListener('click',      () => hide('comingSoonOverlay'));
-    g('btnEndless').addEventListener('click',      () => show('comingSoonOverlay'));
+    g('btnEndless').addEventListener('click',      () => _launchGameMode('endless', 'endless', 'survival'));
 
     // Profile tabs
     g('tabMilitary').addEventListener('click', () => {
@@ -632,23 +644,20 @@
   function _buildMiniGamesGrid() {
     const grid = g('miniGamesGrid');
     if (!grid || !window.GW || !window.GW.MINIGAMES) return;
+    const prog = window.GW.progression;
+    const modeUnlocked = !!(prog && prog.isModeUnlocked('minigames'));
     grid.innerHTML = '';
     GW.MINIGAMES.forEach(mg => {
-      const el = document.createElement(mg.unlocked ? 'button' : 'div');
-      el.className = 'mode-card ' + (mg.unlocked ? 'mode-card--unlocked' : 'mode-card--locked');
+      const el = document.createElement(modeUnlocked ? 'button' : 'div');
+      el.className = 'mode-card ' + (modeUnlocked ? 'mode-card--unlocked' : 'mode-card--locked');
       el.innerHTML = '<span class="mode-icon">' + mg.icon + '</span>' +
         '<span class="mode-name">' + mg.name + '</span>' +
-        (mg.unlocked ? '' : '<span class="mode-lock">🔒</span>') +
+        (modeUnlocked ? '' : '<span class="mode-lock">🔒</span>') +
         '<span class="mode-desc">' + mg.description + '</span>';
-      if (mg.unlocked) {
+      if (modeUnlocked) {
         el.addEventListener('click', () => {
-          if (mg.id === 'free_play') {
-            hide('miniGamesOverlay');
-            setTimeout(() => {
-              sessionStorage.setItem('gw_menu_return', '1');
-              window.location.href = 'game.html?level=1';
-            }, 100);
-          } else { show('comingSoonOverlay'); }
+          hide('miniGamesOverlay');
+          _launchGameMode('minigame', mg.id, 'minigames');
         });
       }
       grid.appendChild(el);
@@ -658,14 +667,22 @@
   function _buildPuzzleGrid() {
     const grid = g('puzzleGrid');
     if (!grid || !window.GW || !window.GW.PUZZLES) return;
+    const prog = window.GW.progression;
+    const modeUnlocked = !!(prog && prog.isModeUnlocked('puzzle'));
     grid.innerHTML = '';
     GW.PUZZLES.forEach(pz => {
-      const el = document.createElement('div');
-      el.className = 'mode-card mode-card--locked';
+      const el = document.createElement(modeUnlocked ? 'button' : 'div');
+      el.className = 'mode-card ' + (modeUnlocked ? 'mode-card--unlocked' : 'mode-card--locked');
       el.innerHTML = '<span class="mode-icon">' + pz.icon + '</span>' +
         '<span class="mode-name">' + pz.name + '</span>' +
-        '<span class="mode-lock">🔒</span>' +
+        (modeUnlocked ? '' : '<span class="mode-lock">🔒</span>') +
         '<span class="mode-desc">' + pz.description + '</span>';
+      if (modeUnlocked) {
+        el.addEventListener('click', () => {
+          hide('puzzleOverlay');
+          _launchGameMode('puzzle', pz.id, 'puzzle');
+        });
+      }
       grid.appendChild(el);
     });
   }
@@ -673,15 +690,22 @@
   function _buildSurvivalGrid() {
     const grid = g('survivalGrid');
     if (!grid || !window.GW || !window.GW.SURVIVAL_MODES) return;
+    const prog = window.GW.progression;
+    const modeUnlocked = !!(prog && prog.isModeUnlocked('survival'));
     grid.innerHTML = '';
     GW.SURVIVAL_MODES.forEach(sv => {
-      const el = document.createElement(sv.unlocked ? 'button' : 'div');
-      el.className = 'mode-card ' + (sv.unlocked ? 'mode-card--unlocked' : 'mode-card--locked');
+      const el = document.createElement(modeUnlocked ? 'button' : 'div');
+      el.className = 'mode-card ' + (modeUnlocked ? 'mode-card--unlocked' : 'mode-card--locked');
       el.innerHTML = '<span class="mode-icon">' + sv.icon + '</span>' +
         '<span class="mode-name">' + sv.name + '</span>' +
-        (sv.unlocked ? '' : '<span class="mode-lock">🔒</span>') +
+        (modeUnlocked ? '' : '<span class="mode-lock">🔒</span>') +
         '<span class="mode-desc">' + sv.description + '</span>';
-      if (sv.unlocked) el.addEventListener('click', () => show('comingSoonOverlay'));
+      if (modeUnlocked) {
+        el.addEventListener('click', () => {
+          hide('survivalOverlay');
+          _launchGameMode('survival', sv.id, 'survival');
+        });
+      }
       grid.appendChild(el);
     });
   }

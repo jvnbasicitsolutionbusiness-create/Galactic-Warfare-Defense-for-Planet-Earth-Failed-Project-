@@ -33,11 +33,10 @@
  * { success: false, message: "...", duplicate?: true }
  */
 
-'use strict';
+import express from 'express';
+import crypto from 'node:crypto';
 
-const express = require('express');
 const router  = express.Router();
-const crypto  = require('crypto');
 
 // ─── Token helpers ────────────────────────────────────────────────────────────
 
@@ -481,4 +480,4 @@ router.post('/register-confirm', (_req, res) => {
   res.status(200).json({ ok: true });
 });
 
-module.exports = router;
+export default router;

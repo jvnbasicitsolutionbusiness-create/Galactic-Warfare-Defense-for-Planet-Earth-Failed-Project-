@@ -345,6 +345,15 @@ GW.WaveManager = class WaveManager {
       timeToImpact: entry.timeToImpact,
     });
     if (!enemy) return null;
+    if (waveDef && waveDef.enemyHpMultiplier > 1) {
+      enemy.maxHp = Math.ceil(enemy.maxHp * waveDef.enemyHpMultiplier);
+      enemy.hp = enemy.maxHp;
+      if (enemy._updateHpBar) enemy._updateHpBar();
+    }
+    if (waveDef && waveDef.enemySpeedMultiplier > 1) {
+      enemy.speed *= waveDef.enemySpeedMultiplier;
+      enemy.effectiveSpeed *= waveDef.enemySpeedMultiplier;
+    }
     if (GW.progression && enemy.id) GW.progression.discoverEnemy(enemy.id);
 
     // Equipment

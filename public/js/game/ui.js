@@ -1229,7 +1229,7 @@ GW.UIManager = class UIManager {
    * @param {Function} onMainMenu      - go to main menu
    * @param {Function|null} onNextLevel - go to next level (null if no next level)
    */
-  showWinScreen(playerState, levelId, cardId, onPlayAgain, onMainMenu, onNextLevel) {
+  showWinScreen(playerState, levelId, cardId, onPlayAgain, onMainMenu, onNextLevel, completionLabel) {
     const lvl     = (window.GW && window.GW.LEVELS && window.GW.LEVELS[levelId]) || null;
     const nextId  = levelId + 1;
     const nextLvl = window.GW && window.GW.LEVELS && window.GW.LEVELS[nextId];
@@ -1240,7 +1240,9 @@ GW.UIManager = class UIManager {
 
     // ── Info lines ──────────────────────────────────────────
     const lines = [
-      'LEVEL ' + levelId + (lvl ? (': ' + lvl.name.toUpperCase()) : '') + ' — COMPLETE',
+      completionLabel
+        ? completionLabel.toUpperCase() + ' — COMPLETE'
+        : 'LEVEL ' + levelId + (lvl ? (': ' + lvl.name.toUpperCase()) : '') + ' — COMPLETE',
       'Aliens Defeated: ' + (playerState.enemiesDefeated || 0),
       'Score: '           + (playerState.score || 0),
     ];

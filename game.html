@@ -55,126 +55,147 @@
 </head>
 <body class="game-page">
 
-  <div id="game-container" role="main" aria-label="Game battlefield"></div>
-  <button id="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen" hidden>
-    <span aria-hidden="true">⛶</span>
-    <span class="sr-only">Full screen</span>
-  </button>
-  <p id="fullscreen-status" class="sr-only" role="status" aria-live="polite"></p>
-  <script>
-  (function () {
-    var button = document.getElementById('fullscreen-toggle');
-    var status = document.getElementById('fullscreen-status');
-    var target = document.getElementById('game-container');
-    if (!button || !target) return;
+  <div id="game-shell">
+    <div id="game-container" role="main" aria-label="Game battlefield"></div>
+    <button id="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Enter full screen" hidden>
+      <span aria-hidden="true">⛶</span>
+      <span class="sr-only">Full screen</span>
+    </button>
+    <p id="fullscreen-status" class="sr-only" role="status" aria-live="polite"></p>
+    <script>
+    (function () {
+      var button = document.getElementById('fullscreen-toggle');
+      var status = document.getElementById('fullscreen-status');
+      var target = document.getElementById('game-shell');
+      if (!button || !target) return;
 
-    function isFullscreen() {
-      return document.fullscreenElement === target || document.webkitFullscreenElement === target;
-    }
-    function updateButton() {
-      var label = isFullscreen() ? 'Exit full screen' : 'Enter full screen';
-      button.setAttribute('aria-label', label);
-      button.title = label;
-    }
-    function showError(error) {
-      console.warn('[GW] Full-screen mode is unavailable:', error);
-      if (status) status.textContent = 'Full-screen mode is unavailable in this browser.';
-    }
+      function isFullscreen() {
+        return document.fullscreenElement === target || document.webkitFullscreenElement === target;
+      }
+      function updateButton() {
+        var label = isFullscreen() ? 'Exit full screen' : 'Enter full screen';
+        button.setAttribute('aria-label', label);
+        button.title = label;
+      }
+      function showError(error) {
+        console.warn('[GW] Full-screen mode is unavailable:', error);
+        if (status) status.textContent = 'Full-screen mode is unavailable in this browser.';
+      }
 
-    function toggleFullscreen() {
-      var action;
-      var supported = false;
-      try {
-        if (isFullscreen()) {
-          if (document.exitFullscreen) { action = document.exitFullscreen(); supported = true; }
-          else if (document.webkitExitFullscreen) { action = document.webkitExitFullscreen(); supported = true; }
-        } else {
-          if (target.requestFullscreen) { action = target.requestFullscreen(); supported = true; }
-          else if (target.webkitRequestFullscreen) { action = target.webkitRequestFullscreen(); supported = true; }
+      function requestLandscape() {
+        var orientation = window.screen && window.screen.orientation;
+        if (!window.matchMedia('(pointer: coarse)').matches ||
+            !orientation || typeof orientation.lock !== 'function') return;
+        try {
+          var result = orientation.lock('landscape');
+          if (result && typeof result.catch === 'function') {
+            result.catch(function (error) {
+              console.warn('[GW] Landscape orientation lock is unavailable:', error);
+            });
+          }
+        } catch (error) {
+          console.warn('[GW] Landscape orientation lock is unavailable:', error);
         }
-      } catch (error) {
-        showError(error);
-        return;
       }
-      if (!supported) {
-        showError(new Error('Fullscreen API is not supported.'));
-      } else if (action && typeof action.then === 'function') {
-        action.then(updateButton).catch(showError);
-      } else {
-        window.setTimeout(updateButton, 0);
-      }
-    }
-    window.GWFullscreen = { toggle: toggleFullscreen };
-    button.addEventListener('click', toggleFullscreen);
-    window.addEventListener('gw:pause-open', function () { button.hidden = false; });
-    window.addEventListener('gw:pause-close', function () { button.hidden = true; });
-    document.addEventListener('keydown', function (event) {
-      var targetTag = event.target && event.target.tagName;
-      if (event.key.toLowerCase() !== 'f' || event.altKey || event.ctrlKey || event.metaKey ||
-          ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(targetTag) !== -1) return;
-      event.preventDefault();
-      toggleFullscreen();
-    });
-    document.addEventListener('fullscreenchange', updateButton);
-    document.addEventListener('webkitfullscreenchange', updateButton);
-  })();
-  </script>
 
-  <!-- Loading screen -->
-  <div id="load-screen" aria-live="polite">
-    <div class="load-inner">
-      <h2 class="load-title">GALACTIC WARFARE: DEFENSE FOR PLANET EARTH</h2>
-      <div class="load-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="loadProgress">
-        <div class="load-bar-fill" id="loadBarFill"></div>
+      function toggleFullscreen() {
+        var action;
+        var supported = false;
+        try {
+          if (isFullscreen()) {
+            if (document.exitFullscreen) { action = document.exitFullscreen(); supported = true; }
+            else if (document.webkitExitFullscreen) { action = document.webkitExitFullscreen(); supported = true; }
+          } else {
+            if (target.requestFullscreen) { action = target.requestFullscreen(); supported = true; }
+            else if (target.webkitRequestFullscreen) { action = target.webkitRequestFullscreen(); supported = true; }
+          }
+        } catch (error) {
+          showError(error);
+          return;
+        }
+        if (!supported) {
+          showError(new Error('Fullscreen API is not supported.'));
+        } else if (action && typeof action.then === 'function') {
+          action.then(function () {
+            updateButton();
+            if (isFullscreen()) requestLandscape();
+          }).catch(showError);
+        } else {
+          window.setTimeout(updateButton, 0);
+        }
+      }
+      window.GWFullscreen = { toggle: toggleFullscreen };
+      button.addEventListener('click', toggleFullscreen);
+      window.addEventListener('gw:pause-open', function () { button.hidden = false; });
+      window.addEventListener('gw:pause-close', function () { button.hidden = true; });
+      document.addEventListener('keydown', function (event) {
+        var targetTag = event.target && event.target.tagName;
+        if (event.key.toLowerCase() !== 'f' || event.altKey || event.ctrlKey || event.metaKey ||
+            ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(targetTag) !== -1) return;
+        event.preventDefault();
+        toggleFullscreen();
+      });
+      document.addEventListener('fullscreenchange', updateButton);
+      document.addEventListener('webkitfullscreenchange', updateButton);
+      })();
+      </script>
+
+    <!-- Loading screen -->
+    <div id="load-screen" aria-live="polite">
+      <div class="load-inner">
+        <h2 class="load-title">GALACTIC WARFARE: DEFENSE FOR PLANET EARTH</h2>
+        <div class="load-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="loadProgress">
+          <div class="load-bar-fill" id="loadBarFill"></div>
+        </div>
+        <p class="load-status" id="loadStatus">Initializing…</p>
+        <button class="loading-audio-toggle" type="button" data-audio-toggle aria-pressed="false">ENABLE SOUND</button>
       </div>
-      <p class="load-status" id="loadStatus">Initializing…</p>
-      <button class="loading-audio-toggle" type="button" data-audio-toggle aria-pressed="false">ENABLE SOUND</button>
     </div>
+
+    <!-- Firebase SDK (compat mode) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <!-- Phaser 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+    <script>
+      if (!window.Phaser) {
+        document.write('<script src="https://unpkg.com/phaser@3.80.1/dist/phaser.min.js" onerror="document.getElementById(\'loadStatus\').textContent=\'ERROR: The game engine could not load. Check your connection and reload.\'"><\/script>');
+      }
+    </script>
+
+    <script src="public/js/audio.js"></script>
+    <script>window.GWAudio.setScene('loading');</script>
+
+    <!-- Config (first — defines GW namespace) -->
+    <script src="public/js/config.js"></script>
+
+    <!-- New systems (load before progression) -->
+    <script src="public/js/game/firebase.js"></script>
+    <script src="public/js/game/sheets-client.js"></script>
+    <script src="public/js/game/progression.js"></script>
+    <script src="public/js/graphics.js"></script>
+    <script src="public/js/game/cards.js"></script>
+    <script src="public/js/game/sprites.js"></script>
+    <script src="public/js/game/briefing.js"></script>
+
+    <!-- Core game subsystems (dependency order) -->
+    <script src="public/js/game/levels.js"></script>
+    <script src="public/js/game/characters.js"></script>
+    <script src="public/js/game/enemies.js"></script>
+    <script src="public/js/game/player.js"></script>
+    <script src="public/js/game/resources.js"></script>
+    <script src="public/js/game/projectiles.js"></script>
+    <script src="public/js/game/collision.js"></script>
+    <script src="public/js/game/combat.js"></script>
+    <script src="public/js/game/waves.js"></script>
+    <script src="public/js/game/sentinel.js"></script>
+    <script src="public/js/game/currency.js"></script>
+    <script src="public/js/game/ui.js"></script>
+    <script src="public/js/game/scenes.js"></script>
+    <script src="public/js/game/game.js"></script>
+    <script src="public/js/main.js"></script>
   </div>
-
-  <!-- Firebase SDK (compat mode) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <!-- Phaser 3 -->
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
-  <script>
-    if (!window.Phaser) {
-      document.write('<script src="https://unpkg.com/phaser@3.80.1/dist/phaser.min.js" onerror="document.getElementById(\'loadStatus\').textContent=\'ERROR: The game engine could not load. Check your connection and reload.\'"><\/script>');
-    }
-  </script>
-
-  <script src="public/js/audio.js"></script>
-  <script>window.GWAudio.setScene('loading');</script>
-
-  <!-- Config (first — defines GW namespace) -->
-  <script src="public/js/config.js"></script>
-
-  <!-- New systems (load before progression) -->
-  <script src="public/js/game/firebase.js"></script>
-  <script src="public/js/game/sheets-client.js"></script>
-  <script src="public/js/game/progression.js"></script>
-  <script src="public/js/graphics.js"></script>
-  <script src="public/js/game/cards.js"></script>
-  <script src="public/js/game/sprites.js"></script>
-  <script src="public/js/game/briefing.js"></script>
-
-  <!-- Core game subsystems (dependency order) -->
-  <script src="public/js/game/levels.js"></script>
-  <script src="public/js/game/characters.js"></script>
-  <script src="public/js/game/enemies.js"></script>
-  <script src="public/js/game/player.js"></script>
-  <script src="public/js/game/resources.js"></script>
-  <script src="public/js/game/projectiles.js"></script>
-  <script src="public/js/game/collision.js"></script>
-  <script src="public/js/game/combat.js"></script>
-  <script src="public/js/game/waves.js"></script>
-  <script src="public/js/game/sentinel.js"></script>
-  <script src="public/js/game/currency.js"></script>
-  <script src="public/js/game/ui.js"></script>
-  <script src="public/js/game/scenes.js"></script>
-  <script src="public/js/game/game.js"></script>
-  <script src="public/js/main.js"></script>
 
 </body>
 </html>

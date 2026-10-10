@@ -679,11 +679,21 @@
         <div class="extras-count"><strong id="extrasMilitaryCount">0 / 0</strong><span>Military cards unlocked</span></div>
         <div class="extras-count"><strong id="extrasAlienCount">0 / 0</strong><span>Alien variants encountered</span></div>
       </div>
-      <div id="extrasCatalogContent" style="overflow-y:auto;max-height:350px">
-        <h3 style="color:#86efac;margin:12px 0 4px">🪖 MILITARY CARDS</h3>
-        <div class="chars-grid" id="extrasMilitaryGrid" aria-live="polite"></div>
-        <h3 style="color:#c4b5fd;margin:12px 0 4px">👽 ALIEN VARIANTS</h3>
-        <div class="chars-grid" id="extrasAliensGrid" aria-live="polite"></div>
+      <div class="chars-tabs" role="tablist" aria-label="Field database categories">
+        <button class="char-tab char-tab--active" id="extrasTabMilitary" type="button" role="tab"
+          aria-selected="true" aria-controls="extrasPanelMilitary" tabindex="0">🪖 MILITARY</button>
+        <button class="char-tab" id="extrasTabAliens" type="button" role="tab"
+          aria-selected="false" aria-controls="extrasPanelAliens" tabindex="-1">👽 ALIENS</button>
+      </div>
+      <div id="extrasCatalogContent" class="extras-catalog-content">
+        <div id="extrasPanelMilitary" class="chars-panel chars-panel--active" role="tabpanel"
+          aria-labelledby="extrasTabMilitary">
+          <div class="chars-grid" id="extrasMilitaryGrid" aria-live="polite"></div>
+        </div>
+        <div id="extrasPanelAliens" class="chars-panel" role="tabpanel"
+          aria-labelledby="extrasTabAliens" hidden>
+          <div class="chars-grid" id="extrasAliensGrid" aria-live="polite"></div>
+        </div>
       </div>
       <button class="menu-btn menu-btn--primary overlay-close-btn" id="btnExtrasClose" aria-label="Close Extras">
         <span class="btn-label">CLOSE</span>
